@@ -1,40 +1,109 @@
 <template>
     <div id="app" class="container mt-3">
-        <div id="intro_area" class="mb-2">
+        <div id="intro_area" class="mb-3">
             <h1>Clubhouse Avatar Pro</h1>
+            <a
+                href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro"
+                target="_blank"
+                >You can find source code of this app on this Github
+                Repository.</a
+            ><br />
             <span>
-                This web app can help you to create excellent avatars for
-                Clubhouse. <br />
+                This web app can help you to create excellent avatars with
+                beautiful border for Clubhouse. <br />
                 This app is free, forever. <br />
                 Share this app if you like it. Thanks.
             </span>
         </div>
-        <div id="upload_area" class="mb-2">
+        <div id="upload_area" class="mb-3">
             <h2>Upload Images</h2>
-            <label style="font-weight: bold">Avatar</label><br />
+            <label style="font-weight: bold">Avatar Image</label><br />
             <input
                 ref="avatar"
                 type="file"
                 class="btn btn-outline-primary"
                 @change="upload_avatar()"
+            /><br />
+            <img
+                v-show="avatar"
+                :src="avatar"
+                class="mt-2"
+                style="
+                    max-width: 300px;
+                    width: 100%;
+                    border-radius: 3px;
+                    border: 1px solid lightgray;
+                "
             />
             <br />
             <br />
-            <label style="font-weight: bold">Background</label><br />
+            <label style="font-weight: bold"
+                >Border Image (You can find and download some jpg image on
+                <a href="https://uigradients.com/" target="_blank">this site</a
+                >)</label
+            ><br />
             <input
                 ref="background"
                 type="file"
                 class="btn btn-outline-primary"
                 @change="upload_background()"
+            /><br />
+            <img
+                v-show="background"
+                :src="background"
+                class="mt-2"
+                style="
+                    max-width: 300px;
+                    width: 100%;
+                    border-radius: 3px;
+                    border: 1px solid lightgray;
+                "
             />
         </div>
-        <div id="settings_area" class="mb-2"></div>
-        <div id="product_area" class="mb-2">
-            <h2>Generated Avatar</h2>
-            <canvas
-                ref="canvas"
-                width="1000"
-                height="1000"
+        <div id="settings_area" class="mb-3">
+            <h2>Settings</h2>
+            <label>Avatar Radius: {{ radius }} </label><br />
+            <input
+                v-model="radius"
+                type="range"
+                class="custom-range"
+                min="0"
+                max="0.55"
+                step="0.001"
+                @input="draw()"
+                style="max-width: 300px"
+            />
+            <br />
+            <label>Avatar Size: {{ size }} </label><br />
+            <input
+                v-model="size"
+                type="range"
+                class="custom-range"
+                min="0"
+                max="1000"
+                step="1"
+                @input="draw()"
+                style="max-width: 300px"
+            />
+            <br />
+            <label v-show="false">Shadow Strength: {{ shadow }} </label><br />
+            <input
+                v-show="false"
+                v-model="shadow"
+                type="range"
+                class="custom-range"
+                min="0"
+                max="100"
+                step="1"
+                @input="draw()"
+                style="max-width: 300px"
+            />
+            <br />
+        </div>
+        <div v-show="product" id="product_area" class="mb-3">
+            <h2>Beautified Avatar</h2>
+            <img
+                ref="product"
                 class="my-3"
                 style="
                     max-width: 300px;
@@ -42,9 +111,18 @@
                     border-radius: 42%;
                     border: 1px solid lightgray;
                 "
+                :src="product"
+            />
+            <canvas
+                ref="canvas"
+                width="1000"
+                height="1000"
+                style="display: none"
             ></canvas>
             <br />
-            <button class="btn btn-outline-primary" @click="download()">Download</button>
+            <button class="btn btn-outline-primary" @click="download()">
+                Download
+            </button>
         </div>
         <div class="background"></div>
     </div>
@@ -57,6 +135,12 @@ export default {
         return {
             avatar: null,
             background: null,
+            product: null,
+            processing: false,
+            radius: 0.495,
+            size: 900,
+            max_size: 1000,
+            shadow: 0,
         };
     },
     methods: {
@@ -82,6 +166,8 @@ export default {
         },
         async draw() {
             if (!this.avatar || !this.background) return;
+            if (this.processing == true) return;
+            this.processing = true;
             let canvas = this.$refs.canvas;
             let ctx = canvas.getContext("2d");
 
@@ -109,15 +195,48 @@ export default {
             });
             avatar_img.src = this.avatar;
 
+            ctx.clearRect(
+                0,
+                0,
+                parseInt(this.max_size),
+                parseInt(this.max_size)
+            );
+
             await bg_loaded;
-            ctx.drawImage(bg_img, 0, 0, 1000, 1000);
+            ctx.drawImage(
+                bg_img,
+                0,
+                0,
+                parseInt(this.max_size),
+                parseInt(this.max_size)
+            );
 
             await avatar_loaded;
             ctx.save();
-            roundedImage(50, 50, 900, 900, 445);
+            if (parseInt(this.shadow)) {
+                ctx.shadowColor = "black";
+                ctx.shadowBlur = parseInt(this.shadow);
+            }
+            roundedImage(
+                (parseInt(this.max_size) - parseInt(this.size)) / 2,
+                (parseInt(this.max_size) - parseInt(this.size)) / 2,
+                parseInt(this.size),
+                parseInt(this.size),
+                parseFloat(this.radius) * parseInt(this.size)
+            );
             ctx.clip();
-            ctx.drawImage(avatar_img, 50, 50, 900, 900);
+            ctx.drawImage(
+                avatar_img,
+                (parseInt(this.max_size) - parseInt(this.size)) / 2,
+                (parseInt(this.max_size) - parseInt(this.size)) / 2,
+                parseInt(this.size),
+                parseInt(this.size)
+            );
             ctx.restore();
+
+            this.product = this.$refs.canvas.toDataURL("image/png");
+
+            this.processing = false;
 
             function roundedImage(x, y, width, height, radius) {
                 ctx.beginPath();
@@ -141,7 +260,7 @@ export default {
         download() {
             let link = document.createElement("a");
             link.download = "avatar.png";
-            link.href = this.$refs.canvas.toDataURL("image/png");
+            link.href = this.product;
             link.click();
         },
     },
