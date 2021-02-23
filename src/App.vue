@@ -1,12 +1,18 @@
 <template>
     <div id="app" class="container mt-3">
         <div id="intro_area" class="mb-3">
-            <h1>Clubhouse Avatar Pro</h1>
+            <h1 style="font-size: 2.1rem">Clubhouse Avatar Pro</h1>
             <a
                 href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro"
                 target="_blank"
-                >You can find source code of this app on this Github
-                Repository.</a
+                class="mr-2"
+                >Source Code</a
+            >
+            <a
+                href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md"
+                target="_blank"
+                class="mr-2"
+                >Privacy Policy</a
             ><br />
             <span>
                 This web app can help you to create excellent avatars with
@@ -16,48 +22,104 @@
             </span>
         </div>
         <div id="upload_area" class="mb-3">
-            <h2>Upload Images</h2>
-            <label style="font-weight: bold">Avatar Image</label><br />
-            <input
-                ref="avatar"
-                type="file"
-                class="btn btn-outline-primary"
-                @change="upload_avatar()"
-            /><br />
+            <div class="row">
+                <div class="col">
+                    <h2>Upload Images</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span style="font-weight: bold">Avatar Image</span><br />
+                    <label class="btn btn-outline-primary">
+                        <span>Upload Avatar</span>
+                        <input
+                            ref="avatar"
+                            type="file"
+                            @change="upload_avatar()"
+                            style="display: none"
+                        /> </label
+                    ><br />
+                    <img
+                        v-if="avatar"
+                        :src="avatar"
+                        class="mt-2"
+                        style="
+                            max-width: 300px;
+                            width: 100%;
+                            border-radius: 3px;
+                            border: 1px solid lightgray;
+                        "
+                    />
+                    <br />
+                </div>
+                <div class="col">
+                    <span style="font-weight: bold">Border Image</span><br />
+                    <label class="btn btn-outline-primary">
+                        <span>Upload Border</span>
+                        <input
+                            ref="background"
+                            type="file"
+                            @change="upload_background()"
+                            style="display: none"
+                        /> </label
+                    ><br />
+                    <span>
+                        or
+                        <a href="javascript:null" @click="init_border_creator()"
+                            >Create One</a
+                        ></span
+                    >
+                    <br />
+                    <img
+                        v-if="background"
+                        :src="background"
+                        class="mt-2"
+                        style="
+                            max-width: 300px;
+                            width: 100%;
+                            border-radius: 3px;
+                            border: 1px solid lightgray;
+                        "
+                    />
+                </div>
+            </div>
+        </div>
+        <div v-if="create_border" id="create_border" class="mb-3">
+            <h2>Create Your Border</h2>
+            <div class="form-group" style="max-width: 300px">
+                <label for="select_template">Select template</label>
+                <select
+                    v-model="create_border.template"
+                    class="form-control"
+                    id="select_template"
+                    @change="border_creator_render()"
+                >
+                    <option selected value="1">1 Color</option>
+                    <option value="2">2 Colors</option>
+                </select>
+            </div>
+            <div v-show="create_border.template > 0">
+                <label for="b_color_0">Color 1</label>
+                <input
+                    v-model="create_border.color[0]"
+                    type="color"
+                    id="b_color_0"
+                    @change="border_creator_render()"
+                />
+            </div>
+            <div v-show="create_border.template > 1">
+                <label for="b_color_1">Color 2</label>
+                <input
+                    v-model="create_border.color[1]"
+                    type="color"
+                    id="b_color_1"
+                    @change="border_creator_render()"
+                />
+            </div>
             <img
-                v-show="avatar"
-                :src="avatar"
-                class="mt-2"
-                style="
-                    max-width: 300px;
-                    width: 100%;
-                    border-radius: 3px;
-                    border: 1px solid lightgray;
-                "
-            />
-            <br />
-            <br />
-            <label style="font-weight: bold"
-                >Border Image (You can find and download some jpg image on
-                <a href="https://uigradients.com/" target="_blank">this site</a
-                >)</label
-            ><br />
-            <input
-                ref="background"
-                type="file"
-                class="btn btn-outline-primary"
-                @change="upload_background()"
-            /><br />
-            <img
-                v-show="background"
-                :src="background"
-                class="mt-2"
-                style="
-                    max-width: 300px;
-                    width: 100%;
-                    border-radius: 3px;
-                    border: 1px solid lightgray;
-                "
+                v-if="create_border.img"
+                :src="create_border.img"
+                style="max-width: 300px"
             />
         </div>
         <div id="settings_area" class="mb-3">
@@ -105,12 +167,7 @@
             <img
                 ref="product"
                 class="my-3"
-                style="
-                    max-width: 300px;
-                    width: 100%;
-                    border-radius: 42%;
-                    border: 1px solid lightgray;
-                "
+                style="max-width: 300px; width: 100%"
                 :src="product"
             />
             <canvas
@@ -141,6 +198,7 @@ export default {
             size: 900,
             max_size: 1000,
             shadow: 0,
+            create_border: null,
         };
     },
     methods: {
@@ -163,6 +221,53 @@ export default {
                 self.draw();
             };
             reader.readAsDataURL(this.$refs.background.files[0]);
+        },
+        init_border_creator() {
+            console.log("Init Border Creator.");
+            if (this.create_border) return;
+            this.create_border = {
+                template: 1,
+                color: ["#66c9ff", "#66fec2"],
+                img: null,
+            };
+            this.border_creator_render();
+        },
+        border_creator_render() {
+            let t = parseInt(this.create_border.template);
+            let canvas = document.createElement("canvas");
+            canvas.width = canvas.height = 1000;
+            let ctx = canvas.getContext("2d");
+            console.log({
+                template: t,
+                color: this.create_border.color,
+            });
+            if (t == 1) {
+                ctx.fillStyle = this.create_border.color[0];
+                ctx.fillRect(0, 0, 1000, 1000);
+            } else if (t == 2) {
+                ctx.fillStyle = this.create_border.color[0];
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g1 = ctx.createRadialGradient(1000, 0, 0, 1000, 0, 800);
+                let color = this.create_border.color[1];
+                let light =
+                    Math.pow(parseInt(color.substr(1, 2), 16), 2) +
+                        Math.pow(parseInt(color.substr(3, 2), 16), 2) +
+                        Math.pow(parseInt(color.substr(5, 2), 16), 2) >
+                    49152;
+                g1.addColorStop(0, color);
+                g1.addColorStop(1, color + "00");
+                ctx.fillStyle = g1;
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g2 = ctx.createRadialGradient(0, 1000, 0, 0, 1000, 800);
+                g2.addColorStop(0, color);
+                g2.addColorStop(1, color + "00");
+                ctx.fillStyle = g2;
+                ctx.fillRect(0, 0, 1000, 1000);
+            }
+            this.background = this.create_border.img = canvas.toDataURL(
+                "image/png"
+            );
+            this.draw();
         },
         async draw() {
             if (!this.avatar || !this.background) return;
@@ -203,42 +308,35 @@ export default {
             );
 
             await bg_loaded;
-            ctx.drawImage(
+            drawRoundedImage(
                 bg_img,
                 0,
                 0,
                 parseInt(this.max_size),
-                parseInt(this.max_size)
+                parseInt(this.max_size),
+                0.45 * parseInt(this.max_size)
             );
 
             await avatar_loaded;
-            ctx.save();
             if (parseInt(this.shadow)) {
                 ctx.shadowColor = "black";
                 ctx.shadowBlur = parseInt(this.shadow);
             }
-            roundedImage(
+            drawRoundedImage(
+                avatar_img,
                 (parseInt(this.max_size) - parseInt(this.size)) / 2,
                 (parseInt(this.max_size) - parseInt(this.size)) / 2,
                 parseInt(this.size),
                 parseInt(this.size),
                 parseFloat(this.radius) * parseInt(this.size)
             );
-            ctx.clip();
-            ctx.drawImage(
-                avatar_img,
-                (parseInt(this.max_size) - parseInt(this.size)) / 2,
-                (parseInt(this.max_size) - parseInt(this.size)) / 2,
-                parseInt(this.size),
-                parseInt(this.size)
-            );
-            ctx.restore();
 
             this.product = this.$refs.canvas.toDataURL("image/png");
 
             this.processing = false;
 
-            function roundedImage(x, y, width, height, radius) {
+            function drawRoundedImage(img, x, y, width, height, radius) {
+                ctx.save();
                 ctx.beginPath();
                 ctx.moveTo(x + radius, y);
                 ctx.lineTo(x + width - radius, y);
@@ -255,6 +353,9 @@ export default {
                 ctx.lineTo(x, y + radius);
                 ctx.quadraticCurveTo(x, y, x + radius, y);
                 ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(img, x, y, width, height);
+                ctx.restore();
             }
         },
         download() {
