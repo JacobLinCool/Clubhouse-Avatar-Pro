@@ -84,7 +84,12 @@
                 </div>
             </div>
         </div>
-        <div v-if="create_border" id="create_border" class="mb-3">
+        <div
+            v-if="create_border"
+            id="create_border"
+            ref="create_border"
+            class="mb-3"
+        >
             <h2>Create Your Border</h2>
             <div class="form-group" style="max-width: 300px">
                 <label for="select_template">Select template</label>
@@ -96,26 +101,54 @@
                 >
                     <option selected value="1">1 Color</option>
                     <option value="2">2 Colors</option>
+                    <option value="3">3 Colors</option>
+                    <option value="4">4 Colors</option>
                 </select>
             </div>
-            <div v-show="create_border.template > 0">
-                <label for="b_color_0">Color 1</label>
-                <input
-                    v-model="create_border.color[0]"
-                    type="color"
-                    id="b_color_0"
-                    @change="border_creator_render()"
-                />
-            </div>
-            <div v-show="create_border.template > 1">
-                <label for="b_color_1">Color 2</label>
-                <input
-                    v-model="create_border.color[1]"
-                    type="color"
-                    id="b_color_1"
-                    @change="border_creator_render()"
-                />
-            </div>
+            <transition name="color-select">
+                <div v-show="create_border.template > 0" class="border-color-select">
+                    <label for="b_color_0">Color 1</label>
+                    <input
+                        v-model="create_border.color[0]"
+                        type="color"
+                        id="b_color_0"
+                        @change="border_creator_render()"
+                    />
+                </div>
+            </transition>
+            <transition name="color-select">
+                <div v-show="create_border.template > 1" class="border-color-select">
+                    <label for="b_color_1">Color 2</label>
+                    <input
+                        v-model="create_border.color[1]"
+                        type="color"
+                        id="b_color_1"
+                        @change="border_creator_render()"
+                    />
+                </div>
+            </transition>
+            <transition name="color-select">
+                <div v-show="create_border.template > 2" class="border-color-select">
+                    <label for="b_color_1">Color 3</label>
+                    <input
+                        v-model="create_border.color[2]"
+                        type="color"
+                        id="b_color_2"
+                        @change="border_creator_render()"
+                    />
+                </div>
+            </transition>
+            <transition name="color-select">
+                <div v-show="create_border.template > 3" class="border-color-select">
+                    <label for="b_color_1">Color 4</label>
+                    <input
+                        v-model="create_border.color[3]"
+                        type="color"
+                        id="b_color_3"
+                        @change="border_creator_render()"
+                    />
+                </div>
+            </transition>
             <img
                 v-if="create_border.img"
                 :src="create_border.img"
@@ -227,10 +260,16 @@ export default {
             if (this.create_border) return;
             this.create_border = {
                 template: 1,
-                color: ["#66c9ff", "#66fec2"],
+                color: ["#66c9ff", "#66fec2", "#d357fe", "#ffc677"],
                 img: null,
             };
             this.border_creator_render();
+            setTimeout(() => {
+                this.$refs.create_border.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }, 100);
         },
         border_creator_render() {
             let t = parseInt(this.create_border.template);
@@ -249,7 +288,7 @@ export default {
                 ctx.fillRect(0, 0, 1000, 1000);
                 let g1 = ctx.createRadialGradient(1000, 0, 0, 1000, 0, 800);
                 let color = this.create_border.color[1];
-                let light =
+                let bright =
                     Math.pow(parseInt(color.substr(1, 2), 16), 2) +
                         Math.pow(parseInt(color.substr(3, 2), 16), 2) +
                         Math.pow(parseInt(color.substr(5, 2), 16), 2) >
@@ -262,6 +301,44 @@ export default {
                 g2.addColorStop(0, color);
                 g2.addColorStop(1, color + "00");
                 ctx.fillStyle = g2;
+                ctx.fillRect(0, 0, 1000, 1000);
+            } else if (t == 3) {
+                ctx.fillStyle = this.create_border.color[0];
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g1 = ctx.createRadialGradient(1000, 0, 0, 1000, 0, 800);
+                g1.addColorStop(0, this.create_border.color[1]);
+                g1.addColorStop(1, this.create_border.color[1] + "00");
+                ctx.fillStyle = g1;
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g2 = ctx.createRadialGradient(0, 1000, 0, 0, 1000, 800);
+                g2.addColorStop(0, this.create_border.color[2]);
+                g2.addColorStop(1, this.create_border.color[2] + "00");
+                ctx.fillStyle = g2;
+                ctx.fillRect(0, 0, 1000, 1000);
+            } else if (t == 4) {
+                ctx.fillStyle = this.create_border.color[0];
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g1 = ctx.createRadialGradient(1000, 0, 0, 1000, 0, 800);
+                g1.addColorStop(0, this.create_border.color[1]);
+                g1.addColorStop(1, this.create_border.color[1] + "00");
+                ctx.fillStyle = g1;
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g2 = ctx.createRadialGradient(0, 1000, 0, 0, 1000, 800);
+                g2.addColorStop(0, this.create_border.color[2]);
+                g2.addColorStop(1, this.create_border.color[2] + "00");
+                ctx.fillStyle = g2;
+                ctx.fillRect(0, 0, 1000, 1000);
+                let g3 = ctx.createRadialGradient(
+                    1000,
+                    1000,
+                    0,
+                    1000,
+                    1000,
+                    800
+                );
+                g3.addColorStop(0, this.create_border.color[3]);
+                g3.addColorStop(1, this.create_border.color[3] + "00");
+                ctx.fillStyle = g3;
                 ctx.fillRect(0, 0, 1000, 1000);
             }
             this.background = this.create_border.img = canvas.toDataURL(
@@ -314,7 +391,7 @@ export default {
                 0,
                 parseInt(this.max_size),
                 parseInt(this.max_size),
-                0.45 * parseInt(this.max_size)
+                0.46 * parseInt(this.max_size)
             );
 
             await avatar_loaded;
@@ -426,12 +503,21 @@ body {
     background-color: #fffce8;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.5s;
+.border-color-select {
+    height: 32px;
+    max-height: 32px;
 }
-.fade-enter,
-.fade-leave-to {
+
+.color-select-enter-active,
+.color-select-leave-active {
+    transition: all 0.3s;
+}
+.color-select-enter {
     opacity: 0;
+    max-height: 32px;
+}
+.color-select-leave-to {
+    opacity: 0;
+    max-height: 0px;
 }
 </style>
