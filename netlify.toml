@@ -1,0 +1,12 @@
+[[headers]]
+  for = "*.js" # js headers
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+[[headers]]
+  for = "*.css" # css headers
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+[[headers]]
+  for = "*.html" # html headers
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net; img-src *;"
