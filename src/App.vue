@@ -6,12 +6,14 @@
                 href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro"
                 target="_blank"
                 class="mr-2"
+                rel="noreferrer noopener"
                 >Source Code</a
             >
             <a
                 href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md"
                 target="_blank"
                 class="mr-2"
+                rel="noreferrer noopener"
                 >Privacy Policy</a
             ><br />
             <span>
@@ -106,7 +108,10 @@
                 </select>
             </div>
             <transition name="color-select">
-                <div v-show="create_border.template > 0" class="border-color-select">
+                <div
+                    v-show="create_border.template > 0"
+                    class="border-color-select"
+                >
                     <label for="b_color_0">Color 1</label>
                     <input
                         v-model="create_border.color[0]"
@@ -117,7 +122,10 @@
                 </div>
             </transition>
             <transition name="color-select">
-                <div v-show="create_border.template > 1" class="border-color-select">
+                <div
+                    v-show="create_border.template > 1"
+                    class="border-color-select"
+                >
                     <label for="b_color_1">Color 2</label>
                     <input
                         v-model="create_border.color[1]"
@@ -128,7 +136,10 @@
                 </div>
             </transition>
             <transition name="color-select">
-                <div v-show="create_border.template > 2" class="border-color-select">
+                <div
+                    v-show="create_border.template > 2"
+                    class="border-color-select"
+                >
                     <label for="b_color_1">Color 3</label>
                     <input
                         v-model="create_border.color[2]"
@@ -139,7 +150,10 @@
                 </div>
             </transition>
             <transition name="color-select">
-                <div v-show="create_border.template > 3" class="border-color-select">
+                <div
+                    v-show="create_border.template > 3"
+                    class="border-color-select"
+                >
                     <label for="b_color_1">Color 4</label>
                     <input
                         v-model="create_border.color[3]"
