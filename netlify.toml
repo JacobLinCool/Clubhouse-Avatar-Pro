@@ -1,4 +1,8 @@
 [[headers]]
+  for = "/" # main page headers
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net; img-src *;"
+[[headers]]
   for = "*.js" # js headers
   [headers.values]
     Cache-Control = "public, max-age=604800"
