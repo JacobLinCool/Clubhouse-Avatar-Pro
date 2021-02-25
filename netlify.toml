@@ -1,7 +1,7 @@
 [[headers]]
   for = "/" # main page headers
   [headers.values]
-    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net; img-src *;"
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net; img-src *"
 [[headers]]
   for = "*.js" # js headers
   [headers.values]
@@ -13,4 +13,4 @@
 [[headers]]
   for = "*.html" # html headers
   [headers.values]
-    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net; img-src *;"
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net; img-src *"
