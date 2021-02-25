@@ -1,7 +1,7 @@
 [[headers]]
   for = "/" # main page headers
   [headers.values]
-    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval';"
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval' data:;"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "0"
     X-Content-Type-Options = "nosniff"
@@ -16,4 +16,4 @@
 [[headers]]
   for = "*.html" # html headers
   [headers.values]
-    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval';"
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval' data:;"
