@@ -1,41 +1,42 @@
 <template>
     <div id="app" class="container mt-3">
         <div id="intro_area" class="mb-3">
-            <h1 style="font-size: 2.1rem">Clubhouse Avatar Pro</h1>
-            <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro" target="_blank" class="mr-2" rel="noreferrer noopener">Source Code</a>
-            <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md" target="_blank" class="mr-2" rel="noreferrer noopener"
-                >Privacy Policy</a
-            ><br />
+            <h1 style="font-size: 2.1rem">{{ text("app_name") }}</h1>
+            <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro" target="_blank" class="mr-2" rel="noreferrer noopener">{{ text("source_code") }}</a>
+            <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md" target="_blank" class="mr-2" rel="noreferrer noopener">{{
+                text("privacy_policy")
+            }}</a>
+            <br />
             <!-- prettier-ignore -->
-            <span style="white-space: pre">This web app can help you to create excellent avatars with beautiful border for Clubhouse. 
-This app is free, forever. 
-Share this app if you like it. Thanks.</span>
+            <span style="white-space: pre-wrap">{{ text("app_description") }}</span>
         </div>
         <div id="upload_area" class="mb-3">
             <div class="row">
                 <div class="col">
-                    <h2>Upload Images</h2>
+                    <h2>{{ text("upload_images") }}</h2>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <span style="font-weight: bold">Avatar Image</span><br />
+                    <span style="font-weight: bold">{{ text("avatar_image") }}</span
+                    ><br />
                     <label class="btn btn-outline-primary">
-                        <span>Upload Avatar</span>
+                        <span>{{ text("upload_avatar") }}</span>
                         <input ref="avatar" type="file" @change="upload_avatar()" style="display: none" /> </label
                     ><br />
                     <img v-if="avatar" :src="avatar" class="mt-2" style="max-width: 300px; width: 100%; border-radius: 3px; border: 1px solid lightgray" />
                     <br />
                 </div>
                 <div class="col">
-                    <span style="font-weight: bold">Border Image</span><br />
+                    <span style="font-weight: bold">{{ text("border_image") }}</span
+                    ><br />
                     <label class="btn btn-outline-primary">
-                        <span>Upload Border</span>
+                        <span>{{ text("upload_border") }}</span>
                         <input ref="background" type="file" @change="upload_background()" style="display: none" /> </label
                     ><br />
                     <span>
-                        or
-                        <a href="javascript:null" @click="init_border_creator()">Create One</a></span
+                        {{ text("or") }}
+                        <a href="javascript:null" @click="init_border_creator()">{{ text("create_one") }}</a></span
                     >
                     <br />
                     <img
@@ -48,9 +49,9 @@ Share this app if you like it. Thanks.</span>
             </div>
         </div>
         <div v-if="create_border" id="create_border" ref="create_border" class="mb-3">
-            <h2>Create Your Border</h2>
+            <h2>{{ text("create_your_border") }}</h2>
             <div class="form-group" style="max-width: 300px">
-                <label for="select_template">Select template</label>
+                <label for="select_template">{{ text("select_template") }}</label>
                 <select v-model="create_border.template" class="form-control" id="select_template" @change="border_creator_render()">
                     <option selected value="1">1 Color</option>
                     <option value="2">2 Colors</option>
@@ -62,7 +63,7 @@ Share this app if you like it. Thanks.</span>
             <transition name="preset-img-select">
                 <div v-show="create_border.template < 0" class="border-preset-img-select">
                     <div class="form-group" style="max-width: 300px">
-                        <label for="b_preset_img">Choose Image</label>
+                        <label for="b_preset_img">{{ text("choose_image") }}</label>
                         <select v-model="create_border.preset_img" class="form-control" id="b_preset_img" @change="border_creator_render()">
                             <option value="instagram" select>Instagram Palette</option>
                             <option value="wood_texture" select>Wood Texture</option>
@@ -78,36 +79,36 @@ Share this app if you like it. Thanks.</span>
             </transition>
             <transition name="color-select">
                 <div v-show="create_border.template > 0" class="border-color-select">
-                    <label for="b_color_0">Color 1</label>
+                    <label for="b_color_0">{{ text("color") }} 1</label>
                     <input v-model="create_border.color[0]" type="color" id="b_color_0" @change="border_creator_render()" />
                 </div>
             </transition>
             <transition name="color-select">
                 <div v-show="create_border.template > 1" class="border-color-select">
-                    <label for="b_color_1">Color 2</label>
+                    <label for="b_color_1">{{ text("color") }} 2</label>
                     <input v-model="create_border.color[1]" type="color" id="b_color_1" @change="border_creator_render()" />
                 </div>
             </transition>
             <transition name="color-select">
                 <div v-show="create_border.template > 2" class="border-color-select">
-                    <label for="b_color_1">Color 3</label>
+                    <label for="b_color_1">{{ text("color") }} 3</label>
                     <input v-model="create_border.color[2]" type="color" id="b_color_2" @change="border_creator_render()" />
                 </div>
             </transition>
             <transition name="color-select">
                 <div v-show="create_border.template > 3" class="border-color-select">
-                    <label for="b_color_1">Color 4</label>
+                    <label for="b_color_1">{{ text("color") }} 4</label>
                     <input v-model="create_border.color[3]" type="color" id="b_color_3" @change="border_creator_render()" />
                 </div>
             </transition>
             <img v-if="create_border.img" :src="create_border.img" style="max-width: 300px" />
         </div>
         <div id="settings_area" class="mb-3">
-            <h2>Settings</h2>
-            <label>Avatar Radius: {{ radius }} </label><br />
+            <h2>{{ text("settings") }}</h2>
+            <label>{{ text("avatar_radius") }}: {{ radius }} </label><br />
             <input v-model="radius" type="range" class="custom-range" min="0" max="0.55" step="0.001" @input="draw()" style="max-width: 300px" />
             <br />
-            <label>Avatar Size: {{ size }} </label><br />
+            <label>{{ text("avatar_size") }}: {{ size }} </label><br />
             <input v-model="size" type="range" class="custom-range" min="0" max="1000" step="1" @input="draw()" style="max-width: 300px" />
             <br />
             <label v-show="false">Shadow Strength: {{ shadow }} </label><br />
@@ -115,11 +116,11 @@ Share this app if you like it. Thanks.</span>
             <br />
         </div>
         <div v-show="product" id="product_area" class="mb-3">
-            <h2>Beautified Avatar</h2>
+            <h2>{{ text("beautified_avatar") }}</h2>
             <img ref="product" class="my-3" style="max-width: 300px; width: 100%" :src="product" />
             <canvas ref="canvas" width="1000" height="1000" style="display: none"></canvas>
             <br />
-            <button class="btn btn-outline-primary" @click="download()">Download</button>
+            <button class="btn btn-outline-primary" @click="download()">{{ text("download") }}</button>
         </div>
         <div class="background"></div>
     </div>
@@ -139,9 +140,72 @@ export default {
             max_size: 1000,
             shadow: 0,
             create_border: null,
+            lang: "en",
+            language_pack: {
+                en: {
+                    app_name: "Clubhouse Avatar Pro",
+                    source_code: "Source Code",
+                    privacy_policy: "Privacy Policy",
+                    app_description:
+                        "This web app can help you to create excellent avatars with beautiful border for Clubhouse. \nThis app is free, forever. \nShare this app if you like it. Thanks.",
+                    upload_images: "Upload Images",
+                    avatar_image: "Avatar Image",
+                    border_image: "Border Image",
+                    upload_avatar: "Upload Avatar",
+                    upload_border: "Upload Border",
+                    or: "or",
+                    create_one: "Create One",
+                    settings: "Settings",
+                    avatar_radius: "Avatar Radius",
+                    avatar_size: "Avatar Size",
+                    beautified_avatar: "Beautified Avatar",
+                    download: "Download",
+                    create_your_border: "Create Your Border",
+                    select_template: "Select template",
+                    choose_image: "Choose Image",
+                    color: "Color",
+                },
+                zh: {
+                    app_name: "Clubhouse Avatar Pro",
+                    source_code: "原始碼",
+                    privacy_policy: "隱私政策",
+                    app_description:
+                        "這個開源且免費的網站可以幫您創建具有美麗邊框的 Clubhouse 頭像。\n如果您喜歡這個網站，歡迎分享給更多人使用。\n我們不會儲存任何您上傳的物件，所有程式均在您的裝置上執行，而非於我們的伺服器。\n非常感謝您選擇此網站，謝謝。",
+                    upload_images: "上傳圖片",
+                    avatar_image: "頭像圖片",
+                    border_image: "邊框圖片",
+                    upload_avatar: "上傳頭像",
+                    upload_border: "上傳邊框",
+                    or: "或",
+                    create_one: "製作一個",
+                    settings: "設定",
+                    avatar_radius: "頭像曲度",
+                    avatar_size: "頭像大小",
+                    beautified_avatar: "您的頭像",
+                    download: "下載",
+                    create_your_border: "建立您的邊框",
+                    select_template: "選擇模板",
+                    choose_image: "選擇圖片",
+                    color: "顏色",
+                },
+            },
         };
     },
     methods: {
+        text(item = "app_name", lang = this.lang) {
+            if (!this.language_pack[lang]) {
+                console.log(`[Language] language "${lang}" is not supported, falled back to language "en".`);
+                lang = "en";
+            }
+            if (this.language_pack[lang][item]) {
+                return this.language_pack[lang][item];
+            }
+            if (this.language_pack["en"][item]) {
+                console.log(`[Language] cannot find "${item}" in "${lang}" language pack, falled back to "en" language pack.`);
+                return this.language_pack["en"][item];
+            }
+            return "";
+        },
         upload_avatar() {
             let self = this;
             let reader = new FileReader();
@@ -342,6 +406,7 @@ export default {
     mounted() {
         console.log(`[App] App Start`);
         window.V = this;
+        this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
     },
 };
 
