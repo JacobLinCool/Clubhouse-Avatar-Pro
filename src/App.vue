@@ -2,26 +2,14 @@
     <div id="app" class="container mt-3">
         <div id="intro_area" class="mb-3">
             <h1 style="font-size: 2.1rem">Clubhouse Avatar Pro</h1>
-            <a
-                href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro"
-                target="_blank"
-                class="mr-2"
-                rel="noreferrer noopener"
-                >Source Code</a
-            >
-            <a
-                href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md"
-                target="_blank"
-                class="mr-2"
-                rel="noreferrer noopener"
+            <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro" target="_blank" class="mr-2" rel="noreferrer noopener">Source Code</a>
+            <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md" target="_blank" class="mr-2" rel="noreferrer noopener"
                 >Privacy Policy</a
             ><br />
-            <span>
-                This web app can help you to create excellent avatars with
-                beautiful border for Clubhouse. <br />
-                This app is free, forever. <br />
-                Share this app if you like it. Thanks.
-            </span>
+            <!-- prettier-ignore -->
+            <span style="white-space: pre">This web app can help you to create excellent avatars with beautiful border for Clubhouse. 
+This app is free, forever. 
+Share this app if you like it. Thanks.</span>
         </div>
         <div id="upload_area" class="mb-3">
             <div class="row">
@@ -34,199 +22,104 @@
                     <span style="font-weight: bold">Avatar Image</span><br />
                     <label class="btn btn-outline-primary">
                         <span>Upload Avatar</span>
-                        <input
-                            ref="avatar"
-                            type="file"
-                            @change="upload_avatar()"
-                            style="display: none"
-                        /> </label
+                        <input ref="avatar" type="file" @change="upload_avatar()" style="display: none" /> </label
                     ><br />
-                    <img
-                        v-if="avatar"
-                        :src="avatar"
-                        class="mt-2"
-                        style="
-                            max-width: 300px;
-                            width: 100%;
-                            border-radius: 3px;
-                            border: 1px solid lightgray;
-                        "
-                    />
+                    <img v-if="avatar" :src="avatar" class="mt-2" style="max-width: 300px; width: 100%; border-radius: 3px; border: 1px solid lightgray" />
                     <br />
                 </div>
                 <div class="col">
                     <span style="font-weight: bold">Border Image</span><br />
                     <label class="btn btn-outline-primary">
                         <span>Upload Border</span>
-                        <input
-                            ref="background"
-                            type="file"
-                            @change="upload_background()"
-                            style="display: none"
-                        /> </label
+                        <input ref="background" type="file" @change="upload_background()" style="display: none" /> </label
                     ><br />
                     <span>
                         or
-                        <a href="javascript:null" @click="init_border_creator()"
-                            >Create One</a
-                        ></span
+                        <a href="javascript:null" @click="init_border_creator()">Create One</a></span
                     >
                     <br />
                     <img
                         v-if="background"
                         :src="background"
                         class="mt-2"
-                        style="
-                            max-width: 300px;
-                            width: 100%;
-                            border-radius: 3px;
-                            border: 1px solid lightgray;
-                        "
+                        style="max-width: 300px; width: 100%; border-radius: 3px; border: 1px solid lightgray"
                     />
                 </div>
             </div>
         </div>
-        <div
-            v-if="create_border"
-            id="create_border"
-            ref="create_border"
-            class="mb-3"
-        >
+        <div v-if="create_border" id="create_border" ref="create_border" class="mb-3">
             <h2>Create Your Border</h2>
             <div class="form-group" style="max-width: 300px">
                 <label for="select_template">Select template</label>
-                <select
-                    v-model="create_border.template"
-                    class="form-control"
-                    id="select_template"
-                    @change="border_creator_render()"
-                >
+                <select v-model="create_border.template" class="form-control" id="select_template" @change="border_creator_render()">
                     <option selected value="1">1 Color</option>
                     <option value="2">2 Colors</option>
                     <option value="3">3 Colors</option>
                     <option value="4">4 Colors</option>
+                    <option value="-1">Preset Images</option>
                 </select>
             </div>
+            <transition name="preset-img-select">
+                <div v-show="create_border.template < 0" class="border-preset-img-select">
+                    <div class="form-group" style="max-width: 300px">
+                        <label for="b_preset_img">Choose Image</label>
+                        <select v-model="create_border.preset_img" class="form-control" id="b_preset_img" @change="border_creator_render()">
+                            <option value="instagram" select>Instagram Palette</option>
+                            <option value="wood_texture" select>Wood Texture</option>
+                            <option value="leaves_texture" select>Leaves Texture</option>
+                            <option value="colorful_stripes" select>Colorful Stripes</option>
+                            <option value="road_yellow" select>Road & Yellow Lines</option>
+                            <option value="old_wood" select>Old Wood</option>
+                            <option value="sand_wave" select>Sand Waves</option>
+                            <option value="strings" select>Strings</option>
+                        </select>
+                    </div>
+                </div>
+            </transition>
             <transition name="color-select">
-                <div
-                    v-show="create_border.template > 0"
-                    class="border-color-select"
-                >
+                <div v-show="create_border.template > 0" class="border-color-select">
                     <label for="b_color_0">Color 1</label>
-                    <input
-                        v-model="create_border.color[0]"
-                        type="color"
-                        id="b_color_0"
-                        @change="border_creator_render()"
-                    />
+                    <input v-model="create_border.color[0]" type="color" id="b_color_0" @change="border_creator_render()" />
                 </div>
             </transition>
             <transition name="color-select">
-                <div
-                    v-show="create_border.template > 1"
-                    class="border-color-select"
-                >
+                <div v-show="create_border.template > 1" class="border-color-select">
                     <label for="b_color_1">Color 2</label>
-                    <input
-                        v-model="create_border.color[1]"
-                        type="color"
-                        id="b_color_1"
-                        @change="border_creator_render()"
-                    />
+                    <input v-model="create_border.color[1]" type="color" id="b_color_1" @change="border_creator_render()" />
                 </div>
             </transition>
             <transition name="color-select">
-                <div
-                    v-show="create_border.template > 2"
-                    class="border-color-select"
-                >
+                <div v-show="create_border.template > 2" class="border-color-select">
                     <label for="b_color_1">Color 3</label>
-                    <input
-                        v-model="create_border.color[2]"
-                        type="color"
-                        id="b_color_2"
-                        @change="border_creator_render()"
-                    />
+                    <input v-model="create_border.color[2]" type="color" id="b_color_2" @change="border_creator_render()" />
                 </div>
             </transition>
             <transition name="color-select">
-                <div
-                    v-show="create_border.template > 3"
-                    class="border-color-select"
-                >
+                <div v-show="create_border.template > 3" class="border-color-select">
                     <label for="b_color_1">Color 4</label>
-                    <input
-                        v-model="create_border.color[3]"
-                        type="color"
-                        id="b_color_3"
-                        @change="border_creator_render()"
-                    />
+                    <input v-model="create_border.color[3]" type="color" id="b_color_3" @change="border_creator_render()" />
                 </div>
             </transition>
-            <img
-                v-if="create_border.img"
-                :src="create_border.img"
-                style="max-width: 300px"
-            />
+            <img v-if="create_border.img" :src="create_border.img" style="max-width: 300px" />
         </div>
         <div id="settings_area" class="mb-3">
             <h2>Settings</h2>
             <label>Avatar Radius: {{ radius }} </label><br />
-            <input
-                v-model="radius"
-                type="range"
-                class="custom-range"
-                min="0"
-                max="0.55"
-                step="0.001"
-                @input="draw()"
-                style="max-width: 300px"
-            />
+            <input v-model="radius" type="range" class="custom-range" min="0" max="0.55" step="0.001" @input="draw()" style="max-width: 300px" />
             <br />
             <label>Avatar Size: {{ size }} </label><br />
-            <input
-                v-model="size"
-                type="range"
-                class="custom-range"
-                min="0"
-                max="1000"
-                step="1"
-                @input="draw()"
-                style="max-width: 300px"
-            />
+            <input v-model="size" type="range" class="custom-range" min="0" max="1000" step="1" @input="draw()" style="max-width: 300px" />
             <br />
             <label v-show="false">Shadow Strength: {{ shadow }} </label><br />
-            <input
-                v-show="false"
-                v-model="shadow"
-                type="range"
-                class="custom-range"
-                min="0"
-                max="100"
-                step="1"
-                @input="draw()"
-                style="max-width: 300px"
-            />
+            <input v-show="false" v-model="shadow" type="range" class="custom-range" min="0" max="100" step="1" @input="draw()" style="max-width: 300px" />
             <br />
         </div>
         <div v-show="product" id="product_area" class="mb-3">
             <h2>Beautified Avatar</h2>
-            <img
-                ref="product"
-                class="my-3"
-                style="max-width: 300px; width: 100%"
-                :src="product"
-            />
-            <canvas
-                ref="canvas"
-                width="1000"
-                height="1000"
-                style="display: none"
-            ></canvas>
+            <img ref="product" class="my-3" style="max-width: 300px; width: 100%" :src="product" />
+            <canvas ref="canvas" width="1000" height="1000" style="display: none"></canvas>
             <br />
-            <button class="btn btn-outline-primary" @click="download()">
-                Download
-            </button>
+            <button class="btn btn-outline-primary" @click="download()">Download</button>
         </div>
         <div class="background"></div>
     </div>
@@ -275,6 +168,7 @@ export default {
             this.create_border = {
                 template: 1,
                 color: ["#66c9ff", "#66fec2", "#d357fe", "#ffc677"],
+                preset_img: "instagram",
                 img: null,
             };
             this.border_creator_render();
@@ -285,7 +179,7 @@ export default {
                 });
             }, 100);
         },
-        border_creator_render() {
+        async border_creator_render() {
             let t = parseInt(this.create_border.template);
             let canvas = document.createElement("canvas");
             canvas.width = canvas.height = 1000;
@@ -342,22 +236,28 @@ export default {
                 g2.addColorStop(1, this.create_border.color[2] + "00");
                 ctx.fillStyle = g2;
                 ctx.fillRect(0, 0, 1000, 1000);
-                let g3 = ctx.createRadialGradient(
-                    1000,
-                    1000,
-                    0,
-                    1000,
-                    1000,
-                    800
-                );
+                let g3 = ctx.createRadialGradient(1000, 1000, 0, 1000, 1000, 800);
                 g3.addColorStop(0, this.create_border.color[3]);
                 g3.addColorStop(1, this.create_border.color[3] + "00");
                 ctx.fillStyle = g3;
                 ctx.fillRect(0, 0, 1000, 1000);
+            } else if (t == -1) {
+                ctx.clearRect(0, 0, 1000, 1000);
+                let img = new Image();
+                let img_loaded = new Promise((solve, reject) => {
+                    img.addEventListener(
+                        "load",
+                        function () {
+                            solve();
+                        },
+                        false
+                    );
+                });
+                img.src = `/static/images/preset/${this.create_border.preset_img}.jpg`;
+                await img_loaded;
+                ctx.drawImage(img, 0, 0, 1000, 1000);
             }
-            this.background = this.create_border.img = canvas.toDataURL(
-                "image/png"
-            );
+            this.background = this.create_border.img = canvas.toDataURL("image/png");
             this.draw();
         },
         async draw() {
@@ -391,22 +291,10 @@ export default {
             });
             avatar_img.src = this.avatar;
 
-            ctx.clearRect(
-                0,
-                0,
-                parseInt(this.max_size),
-                parseInt(this.max_size)
-            );
+            ctx.clearRect(0, 0, parseInt(this.max_size), parseInt(this.max_size));
 
             await bg_loaded;
-            drawRoundedImage(
-                bg_img,
-                0,
-                0,
-                parseInt(this.max_size),
-                parseInt(this.max_size),
-                0.46 * parseInt(this.max_size)
-            );
+            drawRoundedImage(bg_img, 0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.46 * parseInt(this.max_size));
 
             await avatar_loaded;
             if (parseInt(this.shadow)) {
@@ -433,12 +321,7 @@ export default {
                 ctx.lineTo(x + width - radius, y);
                 ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
                 ctx.lineTo(x + width, y + height - radius);
-                ctx.quadraticCurveTo(
-                    x + width,
-                    y + height,
-                    x + width - radius,
-                    y + height
-                );
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
                 ctx.lineTo(x + radius, y + height);
                 ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
                 ctx.lineTo(x, y + radius);
@@ -473,11 +356,7 @@ window.wait = function (t = 1000) {
 /* Edura */
 (function () {
     let src = "//cdn.jsdelivr.net/npm/eruda";
-    if (
-        !window.location.href.includes("edura") &&
-        localStorage.getItem("active-eruda") != "true"
-    )
-        return;
+    if (!window.location.href.includes("edura") && localStorage.getItem("active-eruda") != "true") return;
     document.write("<scr" + 'ipt src="' + src + '"></scr' + "ipt>");
     document.write("<scr" + "ipt>eruda.init();</scr" + "ipt>");
 })();
@@ -531,6 +410,22 @@ body {
     max-height: 32px;
 }
 .color-select-leave-to {
+    opacity: 0;
+    max-height: 0px;
+}
+.border-preset-img-select {
+    height: 80px;
+    max-height: 80px;
+}
+.preset-img-select-enter-active,
+.preset-img-select-leave-active {
+    transition: all 0.3s;
+}
+.preset-img-select-enter {
+    opacity: 0;
+    max-height: 32px;
+}
+.preset-img-select-leave-to {
     opacity: 0;
     max-height: 0px;
 }
