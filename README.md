@@ -24,4 +24,4 @@ If you find some bugs or want to suggest new features, feel free to open a new i
 And also, any good PR is welcome, just feel free to request a new one.
 
 ## Share
-If you like this app, sharing it to your friends is a good idea.
+If you like this app, sharing it with your friends is a good idea.
