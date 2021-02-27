@@ -63,7 +63,7 @@
             <transition name="preset-img-select">
                 <div v-show="create_border.template < 0" class="border-preset-img-select">
                     <div class="form-group" style="max-width: 300px">
-                        <label for="b_preset_img">{{ text("choose_image") }}</label>
+                        <label for="b_preset_img">{{ text("choose_image") }} <span v-show="state.preset_image_downloading" class="text-muted">{{ text("preset_image_downloading") }}...</span> </label>
                         <select v-model="create_border.preset_img" class="form-control" id="b_preset_img" @change="border_creator_render()">
                             <option value="instagram" select>Instagram Palette</option>
                             <option value="wood_texture" select>Wood Texture</option>
@@ -105,11 +105,11 @@
         </div>
         <div id="settings_area" class="mb-3">
             <h2>{{ text("settings") }}</h2>
-            <label>{{ text("avatar_radius") }}: {{ radius }} </label><br />
-            <input v-model="radius" type="range" class="custom-range" min="0" max="0.55" step="0.001" @input="draw()" style="max-width: 300px" />
+            <label for="avatar_radius">{{ text("avatar_radius") }}: {{ radius }} </label><br />
+            <input id="avatar_radius" v-model="radius" type="range" class="custom-range" min="0" max="0.55" step="0.001" @input="draw()" style="max-width: 300px" />
             <br />
-            <label>{{ text("avatar_size") }}: {{ size }} </label><br />
-            <input v-model="size" type="range" class="custom-range" min="0" max="1000" step="1" @input="draw()" style="max-width: 300px" />
+            <label for="avatar_size">{{ text("avatar_size") }}: {{ size }} </label><br />
+            <input id="avatar_size" v-model="size" type="range" class="custom-range" min="0" max="1000" step="1" @input="draw()" style="max-width: 300px" />
             <br />
             <label v-show="false">Shadow Strength: {{ shadow }} </label><br />
             <input v-show="false" v-model="shadow" type="range" class="custom-range" min="0" max="100" step="1" @input="draw()" style="max-width: 300px" />
@@ -164,6 +164,7 @@ export default {
                     select_template: "Select template",
                     choose_image: "Choose Image",
                     color: "Color",
+                    preset_image_downloading: "Downloading"
                 },
                 zh: {
                     app_name: "Clubhouse Avatar Pro",
@@ -187,8 +188,12 @@ export default {
                     select_template: "選擇模板",
                     choose_image: "選擇圖片",
                     color: "顏色",
+                    preset_image_downloading: "圖片下載中"
                 },
             },
+            state: {
+                preset_image_downloading: false
+            }
         };
     },
     methods: {
@@ -306,6 +311,7 @@ export default {
                 ctx.fillStyle = g3;
                 ctx.fillRect(0, 0, 1000, 1000);
             } else if (t == -1) {
+                this.state.preset_image_downloading = true;
                 ctx.clearRect(0, 0, 1000, 1000);
                 let img = new Image();
                 let img_loaded = new Promise((solve, reject) => {
@@ -320,6 +326,7 @@ export default {
                 img.src = `/static/images/preset/${this.create_border.preset_img}.jpg`;
                 await img_loaded;
                 ctx.drawImage(img, 0, 0, 1000, 1000);
+                this.state.preset_image_downloading = false;
             }
             this.background = this.create_border.img = canvas.toDataURL("image/png");
             this.draw();
