@@ -9,7 +9,6 @@ import App from "./App";
 // import swal from "sweetalert2";
 // import BootstrapVue from "bootstrap-vue";
 
-
 /* setup Vue plugins */
 // Vue.use(BootstrapVue);
 // const swalPlugin = {
@@ -35,11 +34,15 @@ Vue.config.productionTip = false;
 
 /* setup Vue app */
 new Vue({
-    el: "#app",
-    components: { App },
-    template: "<App/>",
-    watch: {},
-    metaInfo: {
-        title: "Clubhouse Avatar Pro",
-    },
+  el: "#app",
+  components: { App },
+  template: "<App/>",
+  watch: {},
+  metaInfo: {
+    title: "Clubhouse Avatar Pro"
+  }
 });
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}

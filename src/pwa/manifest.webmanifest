@@ -1,0 +1,32 @@
+{
+  "name": "Clubhouse Avatar Pro",
+  "short_name": "CH Avatar Pro",
+  "description": "A simple but powerful web app that helps you to create excellent Clubhouse avatars with beautiful borders.",
+  "icons": [
+    {
+      "src": "static/images/icon/icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "static/images/icon/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "static/images/icon/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "static/images/icon/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#FFFCE8",
+  "background_color": "#FFFCE8"
+}

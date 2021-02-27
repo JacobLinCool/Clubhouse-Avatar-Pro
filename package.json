@@ -77,7 +77,8 @@
     "webpack-cli": "^3.3.12",
     "webpack-dashboard": "^3.3.1",
     "webpack-dev-server": "^3.11.2",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "workbox-webpack-plugin": "^6.1.1"
   },
   "engines": {
     "node": ">= 6.0.0",
