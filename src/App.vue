@@ -136,6 +136,7 @@
                     <option selected value="arial">Arial</option>
                     <option value="openhuninn">Open Huninn (3.0 M)</option>
                     <option value="naikai">Naikai Font (12.2 M)</option>
+                    <option value="jasonhandwriting3">Jason Handwriting 3 (2.2 M)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -174,7 +175,7 @@
                     class="custom-range"
                     id="text_border"
                     max="30"
-                    min="1"
+                    min="0"
                     step="1"
                     style="max-width: 300px"
                     @input="draw()"
@@ -351,6 +352,7 @@ export default {
                 arial: false,
                 openhuninn: "https://cdn.jsdelivr.net/gh/marsnow/open-huninn-font@1.1/font/jf-openhuninn.woff2",
                 naikai: "https://cdn.jsdelivr.net/gh/max32002/naikaifont/webfont/NaikaiFont-Regular.woff2",
+                jasonhandwriting3: "https://cdn.jsdelivr.net/gh/jasonhandwriting/JasonHandwriting/JasonHandwriting3.ttf",
             },
         };
     },
