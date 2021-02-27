@@ -19,6 +19,13 @@ self.addEventListener("fetch", e => {
           request: e.request,
           response: r
         });
+        fetch(e.request).then(response => {
+          return caches.open(cache_name).then(cache => {
+            console.log("[Service Worker] Caching Resource: " + e.request.url);
+            cache.put(e.request, response.clone());
+            return response;
+          });
+        }).catch(()=>{});
         return r;
       } else {
         console.log(`[Service Worker] Serving Online File.`, {

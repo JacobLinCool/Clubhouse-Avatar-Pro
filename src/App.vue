@@ -63,7 +63,10 @@
             <transition name="preset-img-select">
                 <div v-show="create_border.template < 0" class="border-preset-img-select">
                     <div class="form-group" style="max-width: 300px">
-                        <label for="b_preset_img">{{ text("choose_image") }} <span v-show="state.preset_image_downloading" class="text-muted">{{ text("preset_image_downloading") }}...</span> </label>
+                        <label for="b_preset_img"
+                            >{{ text("choose_image") }}
+                            <span v-show="state.preset_image_downloading" class="text-muted">{{ text("preset_image_downloading") }}...</span>
+                        </label>
                         <select v-model="create_border.preset_img" class="form-control" id="b_preset_img" @change="border_creator_render()">
                             <option value="instagram" select>Instagram Palette</option>
                             <option value="wood_texture" select>Wood Texture</option>
@@ -103,10 +106,114 @@
             </transition>
             <img v-if="create_border.img" :src="create_border.img" style="max-width: 300px" />
         </div>
+        <div id="text_area" class="mb-3">
+            <h2>{{ text("set_text") }}</h2>
+            <div class="form-group">
+                <label for="text_content">{{ text("text_content") }}</label>
+                <input
+                    v-model="avatar_text.content"
+                    type="text"
+                    class="form-control"
+                    id="text_content"
+                    :placeholder="text('text_content_placeholder')"
+                    style="max-width: 300px"
+                    @input="draw()"
+                />
+            </div>
+            <div>
+                <label for="t_color">{{ text("text_color") }}</label>
+                <input v-model="avatar_text.color" type="color" id="t_color" @change="draw()" />
+            </div>
+            <div>
+                <label for="t_border_color">{{ text("text_border_color") }}</label>
+                <input v-model="avatar_text.border_color" type="color" id="t_border_color" @change="draw()" />
+            </div>
+            <div class="form-group">
+                <label for="text_size">{{ text("text_size") }}: {{ avatar_text.size }}</label> <br />
+                <input
+                    v-model="avatar_text.size"
+                    type="range"
+                    class="custom-range"
+                    id="text_size"
+                    max="144"
+                    min="1"
+                    step="1"
+                    style="max-width: 300px"
+                    @input="draw()"
+                />
+            </div>
+            <div class="form-group">
+                <label for="text_weight">{{ text("text_weight") }}: {{ avatar_text.weight }}</label> <br />
+                <input
+                    v-model="avatar_text.weight"
+                    type="range"
+                    class="custom-range"
+                    id="text_weight"
+                    max="9"
+                    min="1"
+                    step="1"
+                    style="max-width: 300px"
+                    @input="draw()"
+                />
+            </div>
+            <div class="form-group">
+                <label for="text_border">{{ text("text_border") }}: {{ avatar_text.border_width }}</label> <br />
+                <input
+                    v-model="avatar_text.border_width"
+                    type="range"
+                    class="custom-range"
+                    id="text_border"
+                    max="30"
+                    min="1"
+                    step="1"
+                    style="max-width: 300px"
+                    @input="draw()"
+                />
+            </div>
+            <div class="form-group">
+                <label for="text_x">{{ text("text_x") }}: {{ avatar_text.x }}</label> <br />
+                <input
+                    v-model="avatar_text.x"
+                    type="range"
+                    class="custom-range"
+                    id="text_x"
+                    max="1000"
+                    min="-1000"
+                    step="1"
+                    style="max-width: 300px"
+                    @input="draw()"
+                />
+            </div>
+            <div class="form-group">
+                <label for="text_y">{{ text("text_y") }}: {{ avatar_text.y }}</label> <br />
+                <input
+                    v-model="avatar_text.y"
+                    type="range"
+                    class="custom-range"
+                    id="text_y"
+                    max="1000"
+                    min="-1000"
+                    step="1"
+                    style="max-width: 300px"
+                    @input="draw()"
+                />
+            </div>
+            <br />
+        </div>
         <div id="settings_area" class="mb-3">
             <h2>{{ text("settings") }}</h2>
             <label for="avatar_radius">{{ text("avatar_radius") }}: {{ radius }} </label><br />
-            <input id="avatar_radius" v-model="radius" type="range" class="custom-range" min="0" max="0.55" step="0.001" @input="draw()" style="max-width: 300px" />
+            <input
+                id="avatar_radius"
+                v-model="radius"
+                type="range"
+                class="custom-range"
+                min="0"
+                max="0.55"
+                step="0.001"
+                @input="draw()"
+                style="max-width: 300px"
+            />
             <br />
             <label for="avatar_size">{{ text("avatar_size") }}: {{ size }} </label><br />
             <input id="avatar_size" v-model="size" type="range" class="custom-range" min="0" max="1000" step="1" @input="draw()" style="max-width: 300px" />
@@ -164,7 +271,17 @@ export default {
                     select_template: "Select template",
                     choose_image: "Choose Image",
                     color: "Color",
-                    preset_image_downloading: "Downloading"
+                    preset_image_downloading: "Downloading",
+                    set_text: "Text",
+                    text_content: "Text Content",
+                    text_size: "Text Size",
+                    text_x: "Text Horizontal Position",
+                    text_y: "Text Vertical Position",
+                    text_content_placeholder: "Moving",
+                    text_weight: "Text Weight",
+                    text_color: "Text Color",
+                    text_border_color: "Text Border Color",
+                    text_border: "Text Border Width",
                 },
                 zh: {
                     app_name: "Clubhouse Avatar Pro",
@@ -188,12 +305,33 @@ export default {
                     select_template: "選擇模板",
                     choose_image: "選擇圖片",
                     color: "顏色",
-                    preset_image_downloading: "圖片下載中"
+                    preset_image_downloading: "圖片下載中",
+                    set_text: "文字",
+                    text_content: "文字內容",
+                    text_size: "文字大小",
+                    text_x: "文字水平位移",
+                    text_y: "文字垂直位移",
+                    text_content_placeholder: "移動中",
+                    text_weight: "文字字重",
+                    text_color: "文字顏色",
+                    text_border_color: "文字外框顏色",
+                    text_border: "文字外框粗細",
                 },
             },
             state: {
-                preset_image_downloading: false
-            }
+                preset_image_downloading: false,
+            },
+            avatar_text: {
+                content: "",
+                size: 64,
+                weight: 4,
+                font: "Arial",
+                color: "#000000",
+                border_color: "#ffffff",
+                x: 0,
+                y: 0,
+                border_width: 6,
+            },
         };
     },
     methods: {
@@ -362,11 +500,14 @@ export default {
             });
             avatar_img.src = this.avatar;
 
+            // Clear Canvas
             ctx.clearRect(0, 0, parseInt(this.max_size), parseInt(this.max_size));
 
+            // Draw Border
             await bg_loaded;
             drawRoundedImage(bg_img, 0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.46 * parseInt(this.max_size));
 
+            // Draw Avatar
             await avatar_loaded;
             if (parseInt(this.shadow)) {
                 ctx.shadowColor = "black";
@@ -381,12 +522,41 @@ export default {
                 parseFloat(this.radius) * parseInt(this.size)
             );
 
+            // Draw Text
+            ctx.save();
+            clipAvatarShape(0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.46 * parseInt(this.max_size));
+            ctx.font = `${parseInt(this.avatar_text.weight) * 100} ${parseInt(this.avatar_text.size) * 5}px ${this.avatar_text.font}`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = this.avatar_text.color;
+            ctx.fillText(
+                this.avatar_text.content,
+                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
+                parseInt(this.max_size) * 0.85 + parseFloat(this.avatar_text.y)
+            );
+
+            ctx.lineWidth = this.avatar_text.border_width;
+            ctx.strokeStyle = this.avatar_text.border_color;
+            ctx.strokeText(
+                this.avatar_text.content,
+                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
+                parseInt(this.max_size) * 0.85 + parseFloat(this.avatar_text.y)
+            );
+
+            ctx.restore();
+
             this.product = this.$refs.canvas.toDataURL("image/png");
 
             this.processing = false;
 
             function drawRoundedImage(img, x, y, width, height, radius) {
                 ctx.save();
+                clipAvatarShape(x, y, width, height, radius);
+                ctx.drawImage(img, x, y, width, height);
+                ctx.restore();
+            }
+
+            function clipAvatarShape(x, y, width, height, radius) {
                 ctx.beginPath();
                 ctx.moveTo(x + radius, y);
                 ctx.lineTo(x + width - radius, y);
@@ -399,8 +569,6 @@ export default {
                 ctx.quadraticCurveTo(x, y, x + radius, y);
                 ctx.closePath();
                 ctx.clip();
-                ctx.drawImage(img, x, y, width, height);
-                ctx.restore();
             }
         },
         download() {
