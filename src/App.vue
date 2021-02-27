@@ -128,6 +128,16 @@
                 <label for="t_border_color">{{ text("text_border_color") }}</label>
                 <input v-model="avatar_text.border_color" type="color" id="t_border_color" @change="draw()" />
             </div>
+            <div class="form-group" style="max-width: 300px">
+                <label for="text_font"
+                    >{{ text("text_font") }} <span v-show="state.font_downloading" class="text-muted">{{ text("font_downloading") }}...</span></label
+                >
+                <select v-model="avatar_text.font" class="form-control" id="text_font" @change="draw()">
+                    <option selected value="arial">Arial</option>
+                    <option value="openhuninn">Open Huninn (3.0 M)</option>
+                    <option value="naikai">Naikai Font (12.2 M)</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="text_size">{{ text("text_size") }}: {{ avatar_text.size }}</label> <br />
                 <input
@@ -282,6 +292,8 @@ export default {
                     text_color: "Text Color",
                     text_border_color: "Text Border Color",
                     text_border: "Text Border Width",
+                    text_font: "Text Font",
+                    font_downloading: "Downloading",
                 },
                 zh: {
                     app_name: "Clubhouse Avatar Pro",
@@ -316,10 +328,13 @@ export default {
                     text_color: "文字顏色",
                     text_border_color: "文字外框顏色",
                     text_border: "文字外框粗細",
+                    text_font: "文字字體",
+                    font_downloading: "字體下載中",
                 },
             },
             state: {
                 preset_image_downloading: false,
+                font_downloading: false,
             },
             avatar_text: {
                 content: "",
@@ -331,6 +346,11 @@ export default {
                 x: 0,
                 y: 0,
                 border_width: 6,
+            },
+            font: {
+                arial: false,
+                openhuninn: "https://cdn.jsdelivr.net/gh/marsnow/open-huninn-font@1.1/font/jf-openhuninn.woff2",
+                naikai: "https://cdn.jsdelivr.net/gh/max32002/naikaifont/webfont/NaikaiFont-Regular.woff2",
             },
         };
     },
@@ -525,6 +545,8 @@ export default {
             // Draw Text
             ctx.save();
             clipAvatarShape(0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.46 * parseInt(this.max_size));
+
+            await this.load_font(this.avatar_text.font, this.font[this.avatar_text.font]);
             ctx.font = `${parseInt(this.avatar_text.weight) * 100} ${parseInt(this.avatar_text.size) * 5}px ${this.avatar_text.font}`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -576,6 +598,29 @@ export default {
             link.download = "avatar.png";
             link.href = this.product;
             link.click();
+        },
+        async load_font(face, url) {
+            let self = this;
+            if (!this.font[face]) {
+                return true;
+            }
+            this.state.font_downloading = true;
+            console.log(`[Font Loader] Loading Font`, {
+                fontface: face,
+                url: url,
+            });
+            let f = new FontFace(face, `url(${url})`);
+
+            return f
+                .load()
+                .then((loaded) => {
+                    document.fonts.add(loaded);
+                    this.font[face] = false;
+                    self.state.font_downloading = false;
+                })
+                .catch((err) => {
+                    console.log(`[Font Loader] Error: ${err}`);
+                });
         },
     },
     mounted() {
