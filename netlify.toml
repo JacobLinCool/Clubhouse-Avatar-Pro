@@ -2,7 +2,7 @@
   for = "/" # main page headers
   [headers.values]
     Cache-Control = "public, max-age=300"
-    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net www.googletagmanager.com 'unsafe-inline' 'unsafe-eval' data:;"
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net www.googletagmanager.com 'unsafe-inline' 'unsafe-eval' data: https:;"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1"
     X-Content-Type-Options = "nosniff"
@@ -18,7 +18,7 @@
   for = "*.html" # html headers
   [headers.values]
     Cache-Control = "public, max-age=300"
-    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net www.googletagmanager.com 'unsafe-inline' 'unsafe-eval' data:;"
+    Content-Security-Policy = "default-src 'self' cdn.jsdelivr.net www.googletagmanager.com 'unsafe-inline' 'unsafe-eval' data: https:;"
 
 [[headers]]
   for = "*.jpg" # jpg headers
