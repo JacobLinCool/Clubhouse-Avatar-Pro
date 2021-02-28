@@ -314,7 +314,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.0.5",
+            version: "v1.0.6",
             tab: "upload",
             avatar: null,
             background: null,
@@ -677,10 +677,15 @@ export default {
                 ctx.clip();
             }
         },
-        download() {
+        async download() {
+            let blob = await new Promise((solve) => {
+                this.$refs.canvas.toBlob((b) => {
+                    solve(b);
+                });
+            });
             let link = document.createElement("a");
             link.download = "avatar.png";
-            link.href = this.product;
+            link.href = URL.createObjectURL(blob); //this.product;
             link.click();
         },
         async load_font(face, url) {
