@@ -1,13 +1,13 @@
 /* css libraries */
 import "bootstrap/dist/css/bootstrap.css";
-// import "tippy.js/dist/tippy.css";
+import "tippy.js/dist/tippy.css";
 // import "bootstrap-vue/dist/bootstrap-vue.css";
 // import "sweetalert2/dist/sweetalert2.css";
 
 /* js libraries */
 import Vue from "vue";
 import App from "./App";
-// import tippy from "tippy.js";
+import tippy from "tippy.js";
 // import swal from "sweetalert2";
 // import BootstrapVue from "bootstrap-vue";
 
@@ -33,12 +33,12 @@ import App from "./App";
 /* setup Vue plugins */
 // Vue.use(BootstrapVue);
 
-// const tippyPlugin = {
-//   install: function(Vue) {
-//     Vue.prototype.$tip = tippy;
-//   }
-// };
-// Vue.use(tippyPlugin);
+const tippyPlugin = {
+  install: function(Vue) {
+    Vue.prototype.$tip = tippy;
+  }
+};
+Vue.use(tippyPlugin);
 
 /* set Vue config */
 Vue.config.productionTip = false;

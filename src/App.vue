@@ -314,7 +314,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.0.7",
+            version: "v1.0.8",
             tab: "upload",
             avatar: null,
             background: null,
@@ -333,7 +333,8 @@ export default {
                     privacy_policy: "Privacy Policy",
                     app_description:
                         "This web app can help you to create excellent avatars with beautiful border for Clubhouse. \nThis app is free, forever. \nShare this app if you like it. Thanks.\n",
-                    app_guide: "1. Choose Avatar Image and Border Image \n2. Add Text (Optional) \n3. Download.",
+                    app_guide: "1. Choose Avatar Image and Border Image \n2. Add Text (Optional) \n3. Long Press Preview to Download.",
+                    save_guide: "Long Press or Right Click to save the image",
                     upload_images: "Upload Images",
                     avatar_image: "Avatar Image",
                     border_image: "Border Image",
@@ -372,6 +373,7 @@ export default {
                         "免費製作具有美麗邊框及狀態文字的 Clubhouse 頭像。\n我們不會儲存任何圖片或設定，所有程式均在您的裝置上執行，而非於我們的伺服器。\n如果您喜歡這個網站，歡迎分享給更多人使用。",
                     app_guide:
                         "1. 選擇「頭像圖片」（必選） 及「邊框圖片」 \n2. 在「編輯文字」及「進階設定」新增文字及調整頭像細部設定\n3. 長按預覽圖像選擇「加入『照片』」儲存至您的手機運用\n（如未出現「加入『照片』」係因為您未開啟取用照片權限）",
+                    save_guide: "手機長按儲存、桌機右鍵儲存",
                     upload_images: "設定圖片",
                     avatar_image: "頭像圖片",
                     border_image: "邊框圖片",
@@ -725,14 +727,26 @@ export default {
 
             return c.toDataURL("image/jpg");
         },
+        set_tips() {
+            let self = this;
+            this.$tip(this.$refs.product, {
+                content: this.text("save_guide"),
+                onShow(instance) {
+                    instance.setContent(self.text("save_guide"));
+                },
+            });
+        },
     },
     async mounted() {
-        console.log(`[App] App Start`);
+        console.log(`[CH Avatar Pro] App Start!`);
+        console.log(`[CH Avatar Pro] Made by JacobLinCool (https://github.com/JacobLinCool) with love.`);
+        console.log(`[CH Avatar Pro] Check out the Github repository of this web app. (https://github.com/JacobLinCool/Clubhouse-Avatar-Pro)`);
         window.V = this;
         this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
         await this.init_border_creator();
         this.avatar = this.default_avatar();
         this.draw();
+        this.set_tips();
     },
 };
 

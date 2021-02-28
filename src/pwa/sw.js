@@ -15,26 +15,28 @@ self.addEventListener("fetch", e => {
   e.respondWith(
     caches.match(e.request).then(r => {
       if (r) {
-        console.log(`[Service Worker] Serving Cached File.`, {
+        console.log(`[Service Worker] Serving Cached File.` /* , {
           request: e.request,
           response: r
-        });
-        fetch(e.request).then(response => {
-          return caches.open(cache_name).then(cache => {
-            console.log("[Service Worker] Caching Resource: " + e.request.url);
-            cache.put(e.request, response.clone());
-            return response;
-          });
-        }).catch(()=>{});
+        }*/);
+        fetch(e.request)
+          .then(response => {
+            return caches.open(cache_name).then(cache => {
+              // console.log("[Service Worker] Caching Resource: " + e.request.url);
+              cache.put(e.request, response.clone());
+              return response;
+            });
+          })
+          .catch(() => {});
         return r;
       } else {
-        console.log(`[Service Worker] Serving Online File.`, {
+        console.log(`[Service Worker] Serving Online File.` /* , {
           request: e.request
-        });
+        } */);
         return fetch(e.request).then(response => {
           return caches.open(cache_name).then(cache => {
-            console.log("[Service Worker] Caching Resource: " + e.request.url);
-            cache.put(e.request, response.clone());
+            // console.log("[Service Worker] Caching Resource: " + e.request.url);
+            if (e.request.method != "POST") cache.put(e.request, response.clone());
             return response;
           });
         });
