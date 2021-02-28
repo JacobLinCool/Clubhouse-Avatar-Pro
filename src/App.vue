@@ -21,10 +21,10 @@
         </div>
         <div id="main_content" class="mb-3 d-flex flex-column justify-content-center align-items-between">
             <div id="preview">
-                <div id="product_area" class="mb-3 d-flex flex-column justify-content-center align-items-center">
+                <div id="product_area" class="mb-3 d-flex flex-column justify-content-center align-items-center" style="min-height: 160px">
                     <img ref="product" class="my-3" style="max-width: 300px; width: 50%" :src="product" />
                     <canvas ref="canvas" width="1000" height="1000" style="display: none"></canvas>
-                    <button v-show="product" class="btn btn-outline-primary" @click="download()">{{ text("download") }}</button>
+                    <button v-show="false" class="btn btn-outline-primary" @click="download()">{{ text("download") }}</button>
                 </div>
             </div>
             <div id="tools">
@@ -234,9 +234,9 @@
                                     type="range"
                                     class="custom-range"
                                     id="text_x"
-                                    max="1000"
-                                    min="-1000"
-                                    step="1"
+                                    max="400"
+                                    min="-400"
+                                    step="5"
                                     style="max-width: 300px"
                                     @input="draw()"
                                 />
@@ -248,9 +248,9 @@
                                     type="range"
                                     class="custom-range"
                                     id="text_y"
-                                    max="1000"
-                                    min="-1000"
-                                    step="1"
+                                    max="450"
+                                    min="-450"
+                                    step="5"
                                     style="max-width: 300px"
                                     @input="draw()"
                                 />
@@ -314,7 +314,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.0.6",
+            version: "v1.0.7",
             tab: "upload",
             avatar: null,
             background: null,
@@ -371,7 +371,7 @@ export default {
                     app_description:
                         "免費製作具有美麗邊框及狀態文字的 Clubhouse 頭像。\n我們不會儲存任何圖片或設定，所有程式均在您的裝置上執行，而非於我們的伺服器。\n如果您喜歡這個網站，歡迎分享給更多人使用。",
                     app_guide:
-                        "1. 選擇「頭像圖片」（必選） 及「邊框圖片」 \n2. 在「編輯文字」及「進階設定」新增文字及調整頭像細部設定\n3. 「下載」至您的手機運用。",
+                        "1. 選擇「頭像圖片」（必選） 及「邊框圖片」 \n2. 在「編輯文字」及「進階設定」新增文字及調整頭像細部設定\n3. 長按預覽圖像選擇「加入『照片』」儲存至您的手機運用\n（如未出現「加入『照片』」係因為您未開啟取用照片權限）",
                     upload_images: "設定圖片",
                     avatar_image: "頭像圖片",
                     border_image: "邊框圖片",
@@ -415,7 +415,7 @@ export default {
                 color: "#000000",
                 border_color: "#ffffff",
                 x: 0,
-                y: 0,
+                y: 350,
                 border_width: 6,
             },
             font: {
@@ -470,7 +470,7 @@ export default {
             };
             reader.readAsDataURL(this.$refs.background.files[0]);
         },
-        init_border_creator() {
+        async init_border_creator() {
             console.log("Init Border Creator.");
             let self = this;
             if (self.create_border) {
@@ -488,7 +488,7 @@ export default {
                     img: null,
                 };
             }
-            self.border_creator_render();
+            await self.border_creator_render();
         },
         async border_creator_render() {
             let t = parseInt(this.create_border.template);
@@ -638,7 +638,7 @@ export default {
             ctx.fillText(
                 this.avatar_text.content,
                 parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
-                parseInt(this.max_size) * 0.85 + parseFloat(this.avatar_text.y)
+                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.y)
             );
 
             ctx.lineWidth = this.avatar_text.border_width;
@@ -646,7 +646,7 @@ export default {
             ctx.strokeText(
                 this.avatar_text.content,
                 parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
-                parseInt(this.max_size) * 0.85 + parseFloat(this.avatar_text.y)
+                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.y)
             );
 
             ctx.restore();
@@ -726,11 +726,11 @@ export default {
             return c.toDataURL("image/jpg");
         },
     },
-    mounted() {
+    async mounted() {
         console.log(`[App] App Start`);
         window.V = this;
         this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
-        this.init_border_creator();
+        await this.init_border_creator();
         this.avatar = this.default_avatar();
         this.draw();
     },
