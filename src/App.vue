@@ -298,6 +298,12 @@
                                 style="max-width: 300px"
                             />
                             <br />
+                            <button class="btn btn-outline-primary" @click="window.prompt('Copy Settings', export_settings())">
+                                {{ text("export_settings") }}
+                            </button>
+                            <button class="btn btn-outline-primary" @click="import_settings(window.prompt('Paste Settings', ''))">
+                                {{ text("import_settings") }}
+                            </button>
                         </div>
                     </transition>
                 </div>
@@ -314,7 +320,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.0.8",
+            version: "v1.1.0",
             tab: "upload",
             avatar: null,
             background: null,
@@ -364,6 +370,8 @@ export default {
                     text_border: "Text Border Width",
                     text_font: "Text Font",
                     font_downloading: "Downloading",
+                    export_settings: "Export Settings",
+                    import_settings: "Import Settings",
                 },
                 zh: {
                     app_name: "Clubhouse Avatar Pro",
@@ -403,6 +411,8 @@ export default {
                     text_border: "文字外框粗細",
                     text_font: "文字字體",
                     font_downloading: "字體下載中",
+                    export_settings: "匯出設定",
+                    import_settings: "匯入設定",
                 },
             },
             state: {
@@ -735,6 +745,74 @@ export default {
                     instance.setContent(self.text("save_guide"));
                 },
             });
+        },
+        export_settings() {
+            let settings = {
+                ver: this.version,
+                bdc: {
+                    tpl: this.create_border.template,
+                    clr: this.create_border.color,
+                    psi: this.create_border.preset_img,
+                },
+                txt: {
+                    cnt: this.avatar_text.content,
+                    sze: this.avatar_text.size,
+                    wgt: this.avatar_text.weight,
+                    fnt: this.avatar_text.font,
+                    clr: this.avatar_text.color,
+                    bdc: this.avatar_text.border_color,
+                    x: this.avatar_text.x,
+                    y: this.avatar_text.y,
+                    bdw: this.avatar_text.border_width,
+                },
+                adv: {
+                    rds: this.radius,
+                    sze: this.size,
+                },
+            };
+
+            return JSON.stringify(settings);
+        },
+        import_settings(settings) {
+            settings = JSON.parse(settings);
+            let ver = Number(
+                this.version
+                    .substring(1)
+                    .split(".")
+                    .map((x) => x.padStart(2, "0"))
+                    .join("")
+            );
+            let settings_ver = Number(
+                settings.ver
+                    .substring(1)
+                    .split(".")
+                    .map((x) => x.padStart(2, "0"))
+                    .join("")
+            );
+            if (settings_ver > ver) {
+                return false;
+            }
+
+            this.radius = settings.adv.rds;
+            this.size = settings.adv.sze;
+
+            this.avatar_text.content = settings.txt.cnt;
+            this.avatar_text.size = settings.txt.sze;
+            this.avatar_text.weight = settings.txt.wgt;
+            this.avatar_text.font = settings.txt.fnt;
+            this.avatar_text.color = settings.txt.clr;
+            this.avatar_text.border_color = settings.txt.bdc;
+            this.avatar_text.x = settings.txt.x;
+            this.avatar_text.y = settings.txt.y;
+            this.avatar_text.border_width = settings.txt.bdw;
+
+            this.create_border.template = settings.bdc.tpl;
+            this.create_border.color = settings.bdc.clr;
+            this.create_border.preset_img = settings.bdc.psi;
+
+            this.border_creator_render();
+            this.draw();
+            return true;
         },
     },
     async mounted() {

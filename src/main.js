@@ -11,6 +11,8 @@ import tippy from "tippy.js";
 // import swal from "sweetalert2";
 // import BootstrapVue from "bootstrap-vue";
 
+Vue.prototype.window = window;
+
 /* setup Vue plugins */
 // Vue.use(BootstrapVue);
 // const swalPlugin = {
