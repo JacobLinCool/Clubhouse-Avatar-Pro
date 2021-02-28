@@ -37,6 +37,20 @@
       You have to enable javascript to run this app.
     </noscript>
     <div id="app"></div>
+    <script>
+      let reload_notice = document.createElement("p");
+      reload_notice.innerHTML = "Please reload to use the latest version of the app.";
+      setTimeout(() => {
+        if (!V) document.body.appendChild(reload_notice);
+      }, 5 * 1000);
+      let notive_interval = setInterval(() => {
+        if (V) reload_notice.remove();
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(notive_interval);
+        if (!V) location.reload(true);
+      }, 20 * 1000);
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>
