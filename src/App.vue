@@ -6,6 +6,14 @@
             <a href="https://github.com/JacobLinCool/Clubhouse-Avatar-Pro/blob/main/Privacy.md" target="_blank" class="mr-2" rel="noreferrer noopener">{{
                 text("privacy_policy")
             }}</a>
+
+            <div class="form-group d-inline-block" style="max-width: 300px; height: 22px">
+                <select v-model="lang" class="form-control" id="select_language" style="height: 2rem; padding: 0 0.5rem">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+
             <br />
             <!-- prettier-ignore -->
             <span style="white-space: pre-wrap">{{ text("app_description") }}</span>
@@ -22,9 +30,13 @@
             <div id="tools">
                 <div id="tab-control" class="mb-2 d-flex flex-column justify-content-center align-items-center">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary" @click="tab = 'upload'">{{ text("upload_images") }}</button>
-                        <button type="button" class="btn btn-outline-primary" @click="tab = 'text'">{{ text("set_text") }}</button>
-                        <button type="button" class="btn btn-outline-primary" @click="tab = 'settings'">{{ text("settings") }}</button>
+                        <button ref="tab_c_upload" type="button" class="btn btn-outline-primary active" @click="switch_tab('upload')">
+                            {{ text("upload_images") }}
+                        </button>
+                        <button ref="tab_c_text" type="button" class="btn btn-outline-primary" @click="switch_tab('text')">{{ text("set_text") }}</button>
+                        <button ref="tab_c_settings" type="button" class="btn btn-outline-primary" @click="switch_tab('settings')">
+                            {{ text("settings") }}
+                        </button>
                     </div>
                 </div>
                 <div id="tabs">
@@ -302,7 +314,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.0.3",
+            version: "v1.0.4",
             tab: "upload",
             avatar: null,
             background: null,
@@ -321,7 +333,7 @@ export default {
                     privacy_policy: "Privacy Policy",
                     app_description:
                         "This web app can help you to create excellent avatars with beautiful border for Clubhouse. \nThis app is free, forever. \nShare this app if you like it. Thanks.\n",
-                    app_guide: "",
+                    app_guide: "1. Choose Avatar 2. Choose Border 3. Add Text (Optional) 4. Download.",
                     upload_images: "Upload Images",
                     avatar_image: "Avatar Image",
                     border_image: "Border Image",
@@ -360,8 +372,6 @@ export default {
                         "這個開源且免費的網站可以幫您創建具有美麗邊框的 Clubhouse 頭像。\n我們不會儲存任何您上傳的物件，所有程式均在您的裝置上執行，而非於我們的伺服器。\n如果您喜歡這個網站，歡迎分享給更多人使用。",
                     app_guide:
                         "1. 選「頭像圖片」(必選) 2. 選「邊框圖片」(必選) 3. 選「進階設定」調整「頭像曲度」及「頭像大小」(選擇) 4. 選「編輯文字」(選擇) 5. 「下載」至您的手機運用。",
-                    guide1: "1. 選擇「頭像圖片」(必選)",
-                    guide2: "2. 選「邊框圖片」(必選)",
                     upload_images: "設定圖片",
                     avatar_image: "頭像圖片",
                     border_image: "邊框圖片",
@@ -430,6 +440,15 @@ export default {
                 return this.language_pack["en"][item];
             }
             return "";
+        },
+        switch_tab(t = "upload") {
+            this.tab = t;
+            let tabs = ["upload", "text", "settings"];
+            let self = this;
+            tabs.forEach((tab) => {
+                self.$refs["tab_c_" + tab].classList.remove("active");
+            });
+            self.$refs["tab_c_" + t].classList.add("active");
         },
         upload_avatar() {
             let self = this;
@@ -716,21 +735,6 @@ export default {
             this.product = this.$refs.canvas.toDataURL("image/png");
             this.processing = false;
         },
-        set_tips() {
-            this.$tip(this.$refs.avatar_label, {
-                content: this.text("guide1"),
-            });
-            this.$tip(this.$refs.border_label, {
-                content: this.text("guide2"),
-            });
-        },
-        guide(step = 1) {
-            if (step == 1) {
-                this.$refs.avatar_label._tippy.show();
-            } else if (step == 2) {
-                this.$refs.border_label._tippy.show();
-            }
-        },
     },
     mounted() {
         console.log(`[App] App Start`);
@@ -738,7 +742,8 @@ export default {
         this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
         this.draw_blank_canvas();
         this.init_border_creator();
-        this.set_tips();
+        // this.set_tips();
+        // this.guide(1);
     },
 };
 
