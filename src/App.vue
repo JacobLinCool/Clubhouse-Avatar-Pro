@@ -34,7 +34,7 @@
                                 <div class="col">
                                     <span style="font-weight: bold">{{ text("avatar_image") }}</span
                                     ><br />
-                                    <label class="btn btn-outline-primary">
+                                    <label ref="avatar_label" class="btn btn-outline-primary">
                                         <span>{{ text("upload_avatar") }}</span>
                                         <input ref="avatar" type="file" @change="upload_avatar()" style="display: none" /> </label
                                     ><br /><br />
@@ -49,7 +49,7 @@
                                 <div class="col">
                                     <span style="font-weight: bold">{{ text("border_image") }}</span
                                     ><br />
-                                    <label class="btn btn-outline-primary">
+                                    <label ref="border_label" class="btn btn-outline-primary">
                                         <span>{{ text("upload_border") }}</span>
                                         <input ref="background" type="file" @change="upload_background()" style="display: none" /> </label
                                     ><br />
@@ -291,6 +291,8 @@
                 </div>
             </div>
         </div>
+
+        <div class="version">{{ version }}</div>
         <div class="background"></div>
     </div>
 </template>
@@ -300,6 +302,7 @@ export default {
     name: "App",
     data() {
         return {
+            version: "v1.0.3",
             tab: "upload",
             avatar: null,
             background: null,
@@ -354,8 +357,11 @@ export default {
                     source_code: "原始碼",
                     privacy_policy: "隱私政策",
                     app_description:
-                        "這個開源且免費的網站可以幫您創建具有美麗邊框的 Clubhouse 頭像。\n如果您喜歡這個網站，歡迎分享給更多人使用。\n我們不會儲存任何您上傳的物件，所有程式均在您的裝置上執行，而非於我們的伺服器。\n非常感謝您選擇此網站，謝謝。",
-                    app_guide: "1. 選「頭像圖片」(必選) 2. 選「邊框圖片」(必選) 3. 選「進階遠項」調整「頭像曲度」及「頭像大小」(選擇) 4. 選「編輯文字」(選擇) 5. 下載至您的手機運用",
+                        "這個開源且免費的網站可以幫您創建具有美麗邊框的 Clubhouse 頭像。\n我們不會儲存任何您上傳的物件，所有程式均在您的裝置上執行，而非於我們的伺服器。\n如果您喜歡這個網站，歡迎分享給更多人使用。",
+                    app_guide:
+                        "1. 選「頭像圖片」(必選) 2. 選「邊框圖片」(必選) 3. 選「進階設定」調整「頭像曲度」及「頭像大小」(選擇) 4. 選「編輯文字」(選擇) 5. 「下載」至您的手機運用。",
+                    guide1: "1. 選擇「頭像圖片」(必選)",
+                    guide2: "2. 選「邊框圖片」(必選)",
                     upload_images: "設定圖片",
                     avatar_image: "頭像圖片",
                     border_image: "邊框圖片",
@@ -447,20 +453,23 @@ export default {
         },
         init_border_creator() {
             console.log("Init Border Creator.");
-            if (this.create_border) return;
-            this.create_border = {
-                template: 2,
-                color: ["#66c9ff", "#66fec2", "#d357fe", "#ffc677"],
-                preset_img: "instagram",
-                img: null,
-            };
-            this.border_creator_render();
-            setTimeout(() => {
-                /*this.$refs.create_border.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });*/
-            }, 100);
+            let self = this;
+            if (self.create_border) {
+                setTimeout(() => {
+                    self.$refs.create_border.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                }, 100);
+            } else {
+                self.create_border = {
+                    template: 2,
+                    color: ["#66c9ff", "#66fec2", "#d357fe", "#ffc677"],
+                    preset_img: "instagram",
+                    img: null,
+                };
+            }
+            self.border_creator_render();
         },
         async border_creator_render() {
             let t = parseInt(this.create_border.template);
@@ -707,6 +716,21 @@ export default {
             this.product = this.$refs.canvas.toDataURL("image/png");
             this.processing = false;
         },
+        set_tips() {
+            this.$tip(this.$refs.avatar_label, {
+                content: this.text("guide1"),
+            });
+            this.$tip(this.$refs.border_label, {
+                content: this.text("guide2"),
+            });
+        },
+        guide(step = 1) {
+            if (step == 1) {
+                this.$refs.avatar_label._tippy.show();
+            } else if (step == 2) {
+                this.$refs.border_label._tippy.show();
+            }
+        },
     },
     mounted() {
         console.log(`[App] App Start`);
@@ -714,6 +738,7 @@ export default {
         this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
         this.draw_blank_canvas();
         this.init_border_creator();
+        this.set_tips();
     },
 };
 
@@ -766,6 +791,13 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: #fffce8;
+}
+
+.version {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 10px;
 }
 
 .border-color-select {
