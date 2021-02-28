@@ -17,7 +17,7 @@
             <br />
             <!-- prettier-ignore -->
             <span style="white-space: pre-wrap">{{ text("app_description") }}</span>
-            <p>{{ text("app_guide") }}</p>
+            <p style="white-space: pre-wrap">{{ text("app_guide") }}</p>
         </div>
         <div id="main_content" class="mb-3 d-flex flex-column justify-content-center align-items-between">
             <div id="preview">
@@ -173,7 +173,7 @@
                                 <label for="t_border_color" class="ml-3">{{ text("text_border_color") }}</label>
                                 <input v-model="avatar_text.border_color" type="color" id="t_border_color" @change="draw()" />
                             </div>
-                            <div class="form-group" style="max-width: 300px">
+                            <div class="form-group mb-2" style="max-width: 300px">
                                 <label for="text_font"
                                     >{{ text("text_font") }}
                                     <span v-show="state.font_downloading" class="text-muted">{{ text("font_downloading") }}...</span></label
@@ -185,7 +185,7 @@
                                     <option value="jasonhandwriting3">Jason Handwriting 3 (2.2 M)</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="text_size">{{ text("text_size") }}: {{ avatar_text.size }}</label> <br />
                                 <input
                                     v-model="avatar_text.size"
@@ -199,7 +199,7 @@
                                     @input="draw()"
                                 />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="text_weight">{{ text("text_weight") }}: {{ avatar_text.weight }}</label> <br />
                                 <input
                                     v-model="avatar_text.weight"
@@ -213,7 +213,7 @@
                                     @input="draw()"
                                 />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="text_border">{{ text("text_border") }}: {{ avatar_text.border_width }}</label> <br />
                                 <input
                                     v-model="avatar_text.border_width"
@@ -227,7 +227,7 @@
                                     @input="draw()"
                                 />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="text_x">{{ text("text_x") }}: {{ avatar_text.x }}</label> <br />
                                 <input
                                     v-model="avatar_text.x"
@@ -241,7 +241,7 @@
                                     @input="draw()"
                                 />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="text_y">{{ text("text_y") }}: {{ avatar_text.y }}</label> <br />
                                 <input
                                     v-model="avatar_text.y"
@@ -314,7 +314,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.0.4",
+            version: "v1.0.5",
             tab: "upload",
             avatar: null,
             background: null,
@@ -333,7 +333,7 @@ export default {
                     privacy_policy: "Privacy Policy",
                     app_description:
                         "This web app can help you to create excellent avatars with beautiful border for Clubhouse. \nThis app is free, forever. \nShare this app if you like it. Thanks.\n",
-                    app_guide: "1. Choose Avatar 2. Choose Border 3. Add Text (Optional) 4. Download.",
+                    app_guide: "1. Choose Avatar Image and Border Image \n2. Add Text (Optional) \n3. Download.",
                     upload_images: "Upload Images",
                     avatar_image: "Avatar Image",
                     border_image: "Border Image",
@@ -369,9 +369,9 @@ export default {
                     source_code: "原始碼",
                     privacy_policy: "隱私政策",
                     app_description:
-                        "這個開源且免費的網站可以幫您創建具有美麗邊框的 Clubhouse 頭像。\n我們不會儲存任何您上傳的物件，所有程式均在您的裝置上執行，而非於我們的伺服器。\n如果您喜歡這個網站，歡迎分享給更多人使用。",
+                        "免費製作具有美麗邊框及狀態文字的 Clubhouse 頭像。\n我們不會儲存任何圖片或設定，所有程式均在您的裝置上執行，而非於我們的伺服器。\n如果您喜歡這個網站，歡迎分享給更多人使用。",
                     app_guide:
-                        "1. 選「頭像圖片」(必選) 2. 選「邊框圖片」(必選) 3. 選「進階設定」調整「頭像曲度」及「頭像大小」(選擇) 4. 選「編輯文字」(選擇) 5. 「下載」至您的手機運用。",
+                        "1. 選擇「頭像圖片」（必選） 及「邊框圖片」 \n2. 在「編輯文字」及「進階設定」新增文字及調整頭像細部設定\n3. 「下載」至您的手機運用。",
                     upload_images: "設定圖片",
                     avatar_image: "頭像圖片",
                     border_image: "邊框圖片",
@@ -609,7 +609,7 @@ export default {
 
             // Draw Border
             await bg_loaded;
-            drawRoundedImage(bg_img, 0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.46 * parseInt(this.max_size));
+            drawRoundedImage(bg_img, 0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.47 * parseInt(this.max_size));
 
             // Draw Avatar
             await avatar_loaded;
@@ -706,44 +706,28 @@ export default {
                     console.log(`[Font Loader] Error: ${err}`);
                 });
         },
-        draw_blank_canvas() {
-            this.processing = true;
-            let x = 0,
-                y = 0,
-                width = parseInt(this.max_size),
-                height = parseInt(this.max_size),
-                radius = 0.46 * parseInt(this.max_size);
-            let canvas = this.$refs.canvas;
-            let ctx = canvas.getContext("2d");
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-            ctx.clip();
+        default_avatar() {
+            let c = document.createElement("canvas");
+            c.width = c.height = 1000;
+            let ctx = c.getContext("2d");
             ctx.fillStyle = "#fff";
             ctx.fillRect(0, 0, 1000, 1000);
-            ctx.restore();
 
-            this.product = this.$refs.canvas.toDataURL("image/png");
-            this.processing = false;
+            ctx.font = `300px Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("👋", 500, 500);
+
+            return c.toDataURL("image/jpg");
         },
     },
     mounted() {
         console.log(`[App] App Start`);
         window.V = this;
         this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
-        this.draw_blank_canvas();
         this.init_border_creator();
-        // this.set_tips();
-        // this.guide(1);
+        this.avatar = this.default_avatar();
+        this.draw();
     },
 };
 
@@ -800,6 +784,7 @@ body {
 
 .version {
     position: absolute;
+    margin: 2px 10px;
     bottom: 0;
     right: 0;
     font-size: 10px;
