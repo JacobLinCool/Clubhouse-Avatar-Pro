@@ -320,7 +320,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.1.1",
+            version: "v1.1.2",
             tab: "upload",
             avatar: null,
             background: null,
@@ -646,16 +646,17 @@ export default {
             ctx.font = `${parseInt(this.avatar_text.weight) * 100} ${parseInt(this.avatar_text.size) * 5}px ${this.avatar_text.font}`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = this.avatar_text.color;
-            ctx.fillText(
+
+            ctx.lineWidth = this.avatar_text.border_width;
+            ctx.strokeStyle = this.avatar_text.border_color;
+            ctx.strokeText(
                 this.avatar_text.content,
                 parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
                 parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.y)
             );
 
-            ctx.lineWidth = this.avatar_text.border_width;
-            ctx.strokeStyle = this.avatar_text.border_color;
-            ctx.strokeText(
+            ctx.fillStyle = this.avatar_text.color;
+            ctx.fillText(
                 this.avatar_text.content,
                 parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
                 parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.y)
@@ -823,6 +824,8 @@ export default {
         this.lang = (navigator.language || navigator.userLanguage).substr(0, 2);
         await this.init_border_creator();
         this.avatar = this.default_avatar();
+
+        await wait(300);
         this.draw();
         this.set_tips();
     },
