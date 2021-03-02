@@ -320,7 +320,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.1.2",
+            version: "v1.1.3",
             tab: "upload",
             avatar: null,
             background: null,
@@ -646,6 +646,7 @@ export default {
             ctx.font = `${parseInt(this.avatar_text.weight) * 100} ${parseInt(this.avatar_text.size) * 5}px ${this.avatar_text.font}`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
+            ctx.lineJoin = "round";
 
             ctx.lineWidth = this.avatar_text.border_width;
             ctx.strokeStyle = this.avatar_text.border_color;
