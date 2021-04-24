@@ -10,6 +10,16 @@ import App from "./App";
 import tippy from "tippy.js";
 // import swal from "sweetalert2";
 // import BootstrapVue from "bootstrap-vue";
+import { wait } from "./js/utils";
+import { language_pack } from "./js/lang";
+import draw from "./js/draw";
+import { dev_edura } from "./js/dev";
+import { service_register } from "./js/service";
+
+// inject to window
+window.wait = wait;
+window.language_pack = language_pack;
+window.draw = draw;
 
 Vue.prototype.window = window;
 
@@ -56,6 +66,6 @@ new Vue({
   }
 });
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
-}
+dev_edura();
+
+service_register();
