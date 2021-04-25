@@ -19,7 +19,7 @@ import { service_register } from "./js/service";
 // inject to window
 window.wait = wait;
 window.language_pack = language_pack;
-window.draw = draw;
+Vue.prototype.DRAW = draw;
 
 Vue.prototype.window = window;
 

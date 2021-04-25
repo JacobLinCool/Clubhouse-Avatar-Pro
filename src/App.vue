@@ -265,9 +265,9 @@
                                 v-model="radius"
                                 type="range"
                                 class="custom-range"
-                                min="0"
-                                max="0.55"
-                                step="0.001"
+                                min="1"
+                                max="5"
+                                step="0.01"
                                 @input="draw()"
                                 style="max-width: 300px"
                             />
@@ -281,6 +281,19 @@
                                 min="0"
                                 max="1000"
                                 step="1"
+                                @input="draw()"
+                                style="max-width: 300px"
+                            />
+                            <br />
+                            <label for="avatar_precision">{{ text("avatar_precision") }}: {{ precision }} </label><br />
+                            <input
+                                id="avatar_precision"
+                                v-model="precision"
+                                type="range"
+                                class="custom-range"
+                                min="60"
+                                max="720"
+                                step="60"
                                 @input="draw()"
                                 style="max-width: 300px"
                             />
@@ -320,15 +333,16 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.1.3",
+            version: "v1.2.0",
             tab: "upload",
             avatar: null,
             background: null,
             product: null,
             processing: false,
-            radius: 0.495,
+            radius: 2.5,
             size: 900,
             max_size: 1000,
+            precision: 180,
             shadow: 0,
             create_border: null,
             lang: "en",
@@ -504,10 +518,11 @@ export default {
             this.draw();
         },
         async draw() {
-            if (!this.avatar || !this.background) return;
-            if (this.processing == true) return;
-            this.processing = true;
-            let canvas = this.$refs.canvas;
+            let self = this;
+            if (!self.avatar || !self.background) return;
+            if (self.processing == true) return;
+            self.processing = true;
+            let canvas = self.$refs.canvas;
             let ctx = canvas.getContext("2d");
 
             let bg_img = new Image();
@@ -520,7 +535,7 @@ export default {
                     false
                 );
             });
-            bg_img.src = this.background;
+            bg_img.src = self.background;
 
             let avatar_img = new Image();
             let avatar_loaded = new Promise((solve, reject) => {
@@ -532,75 +547,55 @@ export default {
                     false
                 );
             });
-            avatar_img.src = this.avatar;
+            avatar_img.src = self.avatar;
+
+            let r = parseInt(self.max_size) / 2,
+                p = parseInt(self.precision),
+                max_size = parseInt(self.max_size),
+                size = parseInt(self.size),
+                radius = parseFloat(self.radius);
 
             // Clear Canvas
-            ctx.clearRect(0, 0, parseInt(this.max_size), parseInt(this.max_size));
+            ctx.clearRect(0, 0, max_size, max_size);
 
             // Draw Border
             await bg_loaded;
-            drawRoundedImage(bg_img, 0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.47 * parseInt(this.max_size));
+            self.DRAW.drawClippedImage(ctx, bg_img, r, r, r, radius, p);
 
             // Draw Avatar
             await avatar_loaded;
-            if (parseInt(this.shadow)) {
+            if (parseInt(self.shadow)) {
                 ctx.shadowColor = "black";
-                ctx.shadowBlur = parseInt(this.shadow);
+                ctx.shadowBlur = parseInt(self.shadow);
             }
-            drawRoundedImage(
-                avatar_img,
-                (parseInt(this.max_size) - parseInt(this.size)) / 2,
-                (parseInt(this.max_size) - parseInt(this.size)) / 2,
-                parseInt(this.size),
-                parseInt(this.size),
-                parseFloat(this.radius) * parseInt(this.size)
-            );
+            self.DRAW.drawClippedImage(ctx, avatar_img, r, r, size / 2, radius, p);
 
             // Draw Text
             ctx.save();
-            clipAvatarShape(0, 0, parseInt(this.max_size), parseInt(this.max_size), 0.46 * parseInt(this.max_size));
+            self.DRAW.clipAvatarShape(ctx, r, r, r, radius, p);
 
-            await this.load_font(this.avatar_text.font, this.font[this.avatar_text.font]);
-            ctx.font = `${parseInt(this.avatar_text.weight) * 100} ${parseInt(this.avatar_text.size) * 5}px ${this.avatar_text.font}`;
+            await self.load_font(self.avatar_text.font, self.font[self.avatar_text.font]);
+            ctx.font = `${parseInt(self.avatar_text.weight) * 100} ${parseInt(self.avatar_text.size) * 5}px ${self.avatar_text.font}`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.lineJoin = "round";
 
-            ctx.lineWidth = this.avatar_text.border_width;
-            ctx.strokeStyle = this.avatar_text.border_color;
-            ctx.strokeText(
-                this.avatar_text.content,
-                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
-                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.y)
-            );
+            ctx.lineWidth = self.avatar_text.border_width;
+            ctx.strokeStyle = self.avatar_text.border_color;
+            ctx.strokeText(self.avatar_text.content, max_size * 0.5 + parseFloat(self.avatar_text.x), max_size * 0.5 + parseFloat(self.avatar_text.y));
 
-            ctx.fillStyle = this.avatar_text.color;
-            ctx.fillText(
-                this.avatar_text.content,
-                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.x),
-                parseInt(this.max_size) * 0.5 + parseFloat(this.avatar_text.y)
-            );
+            ctx.fillStyle = self.avatar_text.color;
+            ctx.fillText(self.avatar_text.content, max_size * 0.5 + parseFloat(self.avatar_text.x), max_size * 0.5 + parseFloat(self.avatar_text.y));
 
             ctx.restore();
 
-            this.product = this.$refs.canvas.toDataURL("image/png");
+            self.product = self.$refs.canvas.toDataURL("image/png");
 
-            this.processing = false;
-
-            function drawRoundedImage(img, x, y, width, height, radius) {
-                ctx.save();
-                clipAvatarShape(x, y, width, height, radius);
-                ctx.drawImage(img, x, y, width, height);
-                ctx.restore();
-            }
-
-            function clipAvatarShape(x, y, width, height, radius) {
-                return window.draw.clipAvatarShape(ctx, x, y, width, height, radius);
-            }
+            self.processing = false;
         },
         async download() {
             let blob = await new Promise((solve) => {
-                this.$refs.canvas.toBlob((b) => {
+                self.$refs.canvas.toBlob((b) => {
                     solve(b);
                 });
             });
@@ -648,8 +643,8 @@ export default {
         },
         set_tips() {
             let self = this;
-            this.$tip(this.$refs.product, {
-                content: this.text("save_guide"),
+            self.$tip(self.$refs.product, {
+                content: self.text("save_guide"),
                 onShow(instance) {
                     instance.setContent(self.text("save_guide"));
                 },
@@ -677,6 +672,7 @@ export default {
                 adv: {
                     rds: this.radius,
                     sze: this.size,
+                    pcs: this.precision,
                 },
             };
 
@@ -704,6 +700,7 @@ export default {
 
             this.radius = settings.adv.rds;
             this.size = settings.adv.sze;
+            this.precision = settings.adv.pcs;
 
             this.avatar_text.content = settings.txt.cnt;
             this.avatar_text.size = settings.txt.sze;
