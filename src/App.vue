@@ -333,7 +333,7 @@ export default {
     name: "App",
     data() {
         return {
-            version: "v1.2.0",
+            version: "v1.2.1",
             tab: "upload",
             avatar: null,
             background: null,
