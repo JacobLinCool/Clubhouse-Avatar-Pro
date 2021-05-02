@@ -24,3 +24,9 @@
   for = "*.jpg" # jpg headers
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+[[redirects]]
+  from = "/*"
+  to = "https://avatar.pages.dev"
+  status = 301
+  force = true
