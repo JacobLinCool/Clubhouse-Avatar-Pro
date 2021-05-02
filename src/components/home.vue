@@ -20,7 +20,7 @@
                 <img src="/static/images/club-4.png" />
             </div>
         </div>
-        <div class="box" @click="window.location.href='https://clubhouse-avatar.netlify.app/'">
+        <div style="display: none" class="box" @click="window.location.href = 'https://clubhouse-avatar.netlify.app/'">
             <h2>{{ text("legacy_version") }}</h2>
             <span>{{ text("legacy_version_description") }}</span>
         </div>
