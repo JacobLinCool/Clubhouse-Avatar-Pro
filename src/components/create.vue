@@ -251,8 +251,8 @@
                                 type="range"
                                 class="custom-range"
                                 min="1"
-                                max="5"
-                                step="0.01"
+                                max="6"
+                                step="0.05"
                                 @input="draw()"
                                 style="max-width: 300px"
                             />
@@ -704,7 +704,7 @@ export default {
         check_type() {
             let type = this.$route.params.type;
             if (type == "club") {
-                this.radius = 4;
+                this.radius = 5.5;
             } else {
                 this.radius = 2.5;
             }
