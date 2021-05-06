@@ -704,7 +704,7 @@ export default {
         check_type() {
             let type = this.$route.params.type;
             if (type == "club") {
-                this.radius = 5.5;
+                this.radius = 6;
             } else {
                 this.radius = 2.5;
             }
