@@ -80,7 +80,7 @@
     "webpack-dashboard": "^3.3.3",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^4.1.0",
-    "workbox-webpack-plugin": "^6.1.1"
+    "workbox-webpack-plugin": "^6.1.5"
   },
   "engines": {
     "node": ">= 6.0.0",
