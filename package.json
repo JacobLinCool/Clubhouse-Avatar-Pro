@@ -42,7 +42,7 @@
     "chalk": "^2.0.1",
     "compression-webpack-plugin": "^6.1.1",
     "copy-webpack-plugin": "^6.4.1",
-    "core-js": "^3.8.3",
+    "core-js": "^3.12.1",
     "css-loader": "^5.0.2",
     "eslint": "^4.15.0",
     "eslint-config-standard": "^10.2.1",
