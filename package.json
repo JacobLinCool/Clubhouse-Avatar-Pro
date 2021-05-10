@@ -44,7 +44,7 @@
     "copy-webpack-plugin": "^6.4.1",
     "core-js": "^3.8.3",
     "css-loader": "^5.2.4",
-    "eslint": "^4.15.0",
+    "eslint": "^7.26.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
